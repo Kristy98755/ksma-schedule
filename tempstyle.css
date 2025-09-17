@@ -61,6 +61,7 @@ body {
     font-weight: 700;
 	color: 0;
 	text-shadow: 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff;
+	text-align: center;
 }
 
 .center {
@@ -312,4 +313,13 @@ body {
 	position: sticky;
 	top:0;
 	z-index: 10;
+	text-align: center;
+}
+
+.CurrWeek {
+	display: block;
+}
+
+.NextWeek {
+	display:none;
 }
