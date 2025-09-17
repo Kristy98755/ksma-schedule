@@ -8,6 +8,7 @@
     
     <!-- Styles -->
     <link rel="stylesheet" href="tempstyle.css" type="text/css">
+	<script src="script.js"> </script>
 	<style>
 /* По умолчанию — вертикальный фон */
 body {
@@ -15,6 +16,7 @@ body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+	background-attachment: fixed;
 }
 
 /* Горизонтальная ориентация (landscape) */
@@ -28,7 +30,7 @@ body {
 </head>
 <body>
 <section class="content container">
-	<span class="page-item__title" align="center">Расписание занятий</span>
+	<span class="page-item__title">Расписание занятий</span>
    <section class="schedule full">
                 
         
@@ -36,15 +38,26 @@ body {
             <div class="row center week-tb">
                 
                 <div class="week-btn active" id="cur">Текущая неделя</div>
-                <!-- <div class="week-btn" id="next">Следующая неделя</div> -->
+                <div class="week-btn active" id="next">Следующая неделя</div>
                 
 
             </div>
-            <span id="week" data-start="2025-09-15" align="center">Расписание с 18 по 21 сентября</span>
+			<div id="CurrWeek">
+            <span id="week" data-start="2025-09-15">Расписание с 18 по 21 сентября</span>
             <ul class="schedule__table"><li class="schedule__day"><span class="schedule__date">Четверг, 18 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">07:40-09:15</div><div class="lesson__params"><span class="lesson__name">Патфиз</span><span class="lesson__type">Практика</span><span class="lesson__place">Морфокорпус, 207 кабинет</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Пятница, 19 сентября</span><ul class="schedule__lessons">
     <li class="lesson"><div class="lesson__time">09:45-12:00</div><div class="lesson__params"><span class="lesson__name">Фарма</span><span class="lesson__type">Практика</span><span class="lesson__place">Главный корпус, 323 кабинет</span></div></li>
-    <li class="lesson"><div class="lesson__time">12:45-14:20</div><div class="lesson__params"><span class="lesson__name">Общая гигиена</span><span class="lesson__type">Лекция</span><span class="lesson__place">Лекционный зал №1</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Суббота, 20 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">10:10-11:45</div><div class="lesson__params"><span class="lesson__name">Патфиз</span><span class="lesson__type">Лекция</span><span class="lesson__place">БМЗ</span></div></li><li class="lesson"><div class="lesson__time">12:30-14:45</div><div class="lesson__params"><span class="lesson__name">Пропедевтика внутренних болезней</span><span class="lesson__type">Практика</span><span class="lesson__place">РДЛЦ при КГМА, 311 кабинет (возле ГУМа)</span></div></li><li class="lesson"><div class="lesson__time">15:15-16:50</div><div class="lesson__params"><span class="lesson__name">Патан</span><span class="lesson__type">Практика</span><span class="lesson__place">Морфокорпус, 114 кабинет</span></div></li></ul></li></ul>
+    <li class="lesson"><div class="lesson__time">12:45-14:20</div><div class="lesson__params"><span class="lesson__name">Общая гигиена</span><span class="lesson__type">Лекция</span><span class="lesson__place">Лекционный зал №1</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Суббота, 20 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">10:10-11:45</div><div class="lesson__params"><span class="lesson__name">Патфиз</span><span class="lesson__type">Лекция</span><span class="lesson__place">БМЗ</span></div></li><li class="lesson"><div class="lesson__time">12:30-14:45</div><div class="lesson__params"><span class="lesson__name">Пропедевтика внутренних болезней</span><span class="lesson__type">Практика</span><span class="lesson__place">РДЛЦ при КГМА, 311 кабинет (возле ГУМа; Киевская 27/1)</span></div></li><li class="lesson"><div class="lesson__time">15:15-16:50</div><div class="lesson__params"><span class="lesson__name">Патан</span><span class="lesson__type">Практика</span><span class="lesson__place">Морфокорпус, 114 кабинет</span></div></li></ul></li></ul>
         </div>
+		
+			<div id="NextWeek" style="display: none;">
+			<span id="week" data-start="2025-09-15" data-end="2025-9-21">Расписание с 22 по 28 сентября</span>
+			<ul class="schedule__table"><li class="schedule__day"><span class="schedule__date">Понедельник, 22 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">07:00-09:15</div><div class="lesson__params"><span class="lesson__name">Клиническая биохимия </span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Главный корпус, 425 кабинет</span></div></li><li class="lesson"><div class="lesson__time">12:45-14:20</div><div class="lesson__params"><span class="lesson__name">Общая гигиена</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>4 корпус (правая дверь), 325 кабинет</span></div></li><li class="lesson"><div class="lesson__time">15:15-16:50</div><div class="lesson__params"><span class="lesson__name">Патологическая анатомия</span><span class="lesson__type">Лекция</span><span class="lesson__place"><i class="icon-marker"></i>БМЗ</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Вторник, 23 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">07:40-09:15</div><div class="lesson__params"><span class="lesson__name">Топографическая анатомия</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Кафедра: Нормальной и топографической анатомии</span></div></li><li class="lesson"><div class="lesson__time">12:45-14:20</div><div class="lesson__params"><span class="lesson__name">Пропедевтика хирургических болезней</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Национальный госпиталь (Тоголок Молдо 1/13)</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Среда, 24 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">07:40-09:15</div><div class="lesson__params"><span class="lesson__name">Пропедевтика детских болезней</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>3 детская больница, соматический корпус, подвал, 6 кабинет</span></div></li><li class="lesson"><div class="lesson__time">09:45-12:00</div><div class="lesson__params"><span class="lesson__name">НИРС</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Центр тестирования, подвал<br><b>ВЗЯТЬ КРОКСЫ!</b></span></div></li><li class="lesson"><div class="lesson__time">12:45-14:20</div><div class="lesson__params"><span class="lesson__name">Базисная фармакология</span><span class="lesson__type">Лекция</span><span class="lesson__place"><i class="icon-marker"></i>Лекционный зал №1</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Четверг, 25 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">07:40-09:15</div><div class="lesson__params"><span class="lesson__name">Патфиз</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Морфокорпус, 207 кабинет</span></div></li><li class="lesson"><div class="lesson__time">09:45-12:00</div><div class="lesson__params"><span class="lesson__name">Фарма</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Главный корпус, 323 кабинет</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Пятница, 26 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">10:10-11:45</div><div class="lesson__params"><span class="lesson__name">Пропедевтика хирургических болезней</span><span class="lesson__type">Лекция</span><span class="lesson__place"><i class="icon-marker"></i>Национальный госпиталь (Тоголок Молдо 1/13)</span></div></li><li class="lesson"><div class="lesson__time">12:45-14:20</div><div class="lesson__params"><span class="lesson__name">Пропедевтика внутренних болезней</span><span class="lesson__type">Лекция</span><span class="lesson__place"><i class="icon-marker"></i>Главный корпус, ЛЗ1</span></div></li><li class="lesson"><div class="lesson__time">15:15-16:50</div><div class="lesson__params"><span class="lesson__name">Лучевая диагностика</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Медцентр КГМА (по Тыныстанова), 109 кабинет</span></div></li></ul></li><li class="schedule__day"><span class="schedule__date">Суббота, 27 сентября</span><ul class="schedule__lessons"><li class="lesson"><div class="lesson__time">10:10-11:45</div><div class="lesson__params"><span class="lesson__name">Патфиз</span><span class="lesson__type">Лекция</span><span class="lesson__place"><i class="icon-marker"></i>БМЗ</span></div></li><li class="lesson"><div class="lesson__time">12:30-14:45</div><div class="lesson__params"><span class="lesson__name">Пропедевтика внутренних болезней</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>РДЛЦ, 311 кабинет (около ГУМа; Киевская 27/1)</span></div></li><li class="lesson"><div class="lesson__time">15:15-16:50</div><div class="lesson__params"><span class="lesson__name">Патан</span><span class="lesson__type">Практика</span><span class="lesson__place"><i class="icon-marker"></i>Морфокорпус, 114 кабинет</span></div></li></ul></li></ul>
+			
+			</div>
+		
+		
+		
+		</div>
     </section>
 </section>
 
