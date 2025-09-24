@@ -1,96 +1,65 @@
-/*header*/
+/* Общие стили */
 * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'PTSr',Arial,Helvetica,sans-serif;
+    font-family: 'PTSr', Arial, Helvetica, sans-serif;
     padding: 0;
     margin: 0;
     font-size: 14px;
     color: #32465a;
-    -webkit-font-smoothing: antialiased!important;
-    -moz-osx-font-smoothing: grayscale!important
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    background-image: url('https://i.postimg.cc/sXHYB2M0/0e7c67fa07a71a920d992cf27a417776.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
-/*Schedule*/
+
+@media (orientation: landscape) {
+    body {
+        background-image: url('https://i.postimg.cc/BZMqW02w/image.png');
+    }
+}
+
+/* Заголовок страницы */
+.page-item__title {
+    display: block;
+    color: #000;
+    font-size: 30px;
+    letter-spacing: -0.75px;
+    background-color: #bbdd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-align: center;
+}
+
+/* Кнопки недели */
 .week-btn {
     display: table-cell;
-    border: #e5e5e5 1px solid;
+    border: 1px solid #e5e5e5;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.16);
     padding: 12px 20px;
     cursor: pointer;
     position: relative;
     text-decoration: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none
+    user-select: none;
 }
 
-.week-cal-btn__cont {
-    position: absolute;
-    margin-left: 15px
-}
-
-.week-cal-btn__cont {
-    display: block;
-    padding: 9px 16px;
-    line-height: 21px;
-    cursor: pointer;
-    font-size: 12pt;
-    text-decoration: none;
-    color: #fff;
-    background: #0b6da5;
-    border-color: #0b6da5
-}
-
-.week-cal-btn__cont:hover {
-    background: #005ba5
-}
-
-.week-cal-btn__cont>i {
-    font-size: 20px;
-}
-
-#week {
-    display: block;
-    margin: 10px 0;
-    font-size: 18px;
-    font-weight: 700;
-	color: 0;
-	text-shadow: 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff;
-	text-align: center;
-}
-
-.center {
-    text-align: center
-}
-
-.form-group {
-    display: inline-block
-}
-
-.week-tb {
-    display: table;
-    margin: 0 auto;
-    position: relative
-}
-
-.width100 {
-    width: 100%
-}
-
-.week-btn.active,.week-btn:hover {
-	border-bottom: 0;
+.week-btn.active,
+.week-btn:hover {
+    border-bottom: 0;
     color: #32465a;
-	border-bottom-left-radius: 5px;
-	border-bottom-right-radius: 5px;
-	background-color: #bbdd;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #bbdd;
 }
 
-.week-btn.active:before,.week-btn:hover:before {
+.week-btn.active:before,
+.week-btn:hover:before {
     content: '';
     position: absolute;
     left: 0;
@@ -99,81 +68,50 @@ body {
     height: 4px;
     background: #000;
     animation: jump-horizontal .3s forwards;
-	border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
-#schedule_tb td {
-    border: 1px solid #ccc
-}
-
-.gr_sel {
-    display: inline-block;
-    cursor: pointer;
-    color: #32465a
-}
-
-.gr_sel:hover {
-    color: #1565c0
-}
-
-.gr_sel+.gr_sel {
-    margin-left: 8px
-}
-
-.gr_sel:not(:last-child):after {
-    content: ','
-}
-
+/* Секция расписания */
 .schedule__table {
     margin: 0 0 40px;
     padding: 0;
-    list-style: none
-}
-
-.schedule__params {
-    display: none
-}
-
-.schedule__data {
-    display: none
+    list-style: none;
 }
 
 .schedule__day {
     margin: 0 0 30px 0;
-    padding: 0
+    padding: 0;
 }
 
 .schedule__date {
     padding-top: 15px;
     width: 90px;
     text-align: right;
-	text-shadow: 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff;
-	color:0;
-	font-weight: 600;
-	
+    text-shadow: 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff;
+    color: #000;
+    font-weight: 600;
 }
 
 .schedule__lessons {
     margin: 0;
     padding: 0;
     list-style: none;
-    border: #e5e5e5 1px solid;
+    border: 1px solid #e5e5e5;
     border-radius: 3px;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.16);
-	background-color: #bbdd;
+    background-color: #bbdd;
 }
 
-
-
+/* Уроки */
 .lesson {
     display: table;
     width: 100%;
-    padding: 12px 20px!important
+    padding: 12px 20px !important;
 }
 
-.lesson+.lesson {
-    border-top: solid 1px #e5e5e5
+.lesson + .lesson {
+    border-top: 1px solid #e5e5e5;
 }
 
 .lesson__time {
@@ -189,15 +127,15 @@ body {
 .lesson__params {
     display: table-cell;
     padding-left: 10px;
-    font-size: 14px
+    font-size: 14px;
 }
 
-.lesson__params>span {
-    display: block
+.lesson__params > span {
+    display: block;
 }
 
-.lesson__params>span+span {
-    margin-top: 5px
+.lesson__params > span + span {
+    margin-top: 5px;
 }
 
 .lesson__name {
@@ -212,114 +150,51 @@ body {
 
 .lesson__place {
     color: #32465a;
-    transition: color .3s
+    transition: color .3s;
 }
 
-.week-cal-btn__calendar {
-    display: none;
-    position: absolute;
-    top: 44px;
-    right: -68px;
-    z-index: 1000
+/* Выравнивание */
+.center {
+    text-align: center;
 }
 
-.week-cal-btn__calendar-open {
+#week {
     display: block;
-    -webkit-animation: popover .2s ease-in-out;
-    -moz-animation: popover .2s ease-in-out;
-    animation: popover .2s ease-in-out
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 700;
+    text-shadow: 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff;
+    text-align: center;
 }
 
-.ui-datepicker {
-    background: #fff
-}
-
-.ui-datepicker-header {
-    color: #000
-}
-
-.ui-datepicker-calendar tr:hover {
-    background: #ededed;
-    cursor: pointer
-}
-
-.ui-state-default {
-    color: #999!important;
-    text-decoration: none
-}
-
+/* Анимации */
 @keyframes jump-horizontal {
-    0% {
-        transform: scaleX(.7)
-    }
-
-    50% {
-        transform: scaleX(1)
-    }
-
-    80% {
-        transform: scaleX(.9)
-    }
-
-    100% {
-        transform: scaleX(1)
-    }
+    0% { transform: scaleX(.7); }
+    50% { transform: scaleX(1); }
+    80% { transform: scaleX(.9); }
+    100% { transform: scaleX(1); }
 }
 
-@keyframes popover {
-    0% {
-        opacity: 0;
-        -webkit-transform: translateY(-30px);
-        -moz-transform: translateY(-30px);
-        -ms-transform: translateY(-30px);
-        -o-transform: translateY(-30px);
-        transform: translateY(-30px)
-    }
-
-    100% {
-        opacity: 1;
-        -webkit-transform: translateY(0);
-        -moz-transform: translateY(0);
-        -ms-transform: translateY(0);
-        -o-transform: translateY(0);
-        transform: translateY(0)
-    }
-}
-
+/* Адаптив */
 @media (min-width: 768px) {
     .schedule__date {
-        float:left
+        float: left;
     }
 
     .schedule__lessons {
-        margin-left: 110px
+        margin-left: 110px;
     }
 }
 
 @media (max-width: 1330px) {
     .schedule {
-        margin-left:15px;
-        margin-right: 15px
+        margin-left: 15px;
+        margin-right: 15px;
     }
 }
 
-
-.page-item__title {
-    display: block;
-    color: 0;
-    font-size: 30px;
-    letter-spacing: -0.75px;
-    background-color: #bbdd;
-	position: sticky;
-	top:0;
-	z-index: 10;
-	text-align: center;
-}
-
-.CurrWeek {
-	display: block;
-}
-
-.NextWeek {
-	display:none;
+.week-tb {
+    display: table;
+    margin: 0 auto;
+    position: relative
 }
