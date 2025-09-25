@@ -3,6 +3,15 @@
     box-sizing: border-box;
 }
 
+
+a {
+    color: turquoise;
+    -webkit-text-stroke: 0.5px #007eff;
+    font-weight: bold;
+    text-shadow: 0 0 5px #000000;
+}
+
+
 body {
     font-family: 'PTSr', Arial, Helvetica, sans-serif;
     padding: 0;

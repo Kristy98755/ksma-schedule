@@ -7,10 +7,19 @@ document.addEventListener("DOMContentLoaded", function() {
     // Если значение содержит HTML, оно вставляется через innerHTML
     // Для глобальных замен используем только текст
     const overrides = {
+		
         // "НИРС": "Физика <br><i style='color:green;'>лаб. работа</i>",
+		// "": "",
+		"(пат.физ.)": "",
+		"(луч.д.)": "",
+		"(пат.анат.)": "",
         "Лучевая диагностика": "<a href='https://chatgpt.com/share/68d51f67-d684-800b-ae86-b0d2f639597c'>Лучевая диагностика</a>",
-        // глобальная замена текста по всему html
-        // "а": "Ж"
+        "Большой морфологич.лекц.зал": "БМЗ",
+		"311 (фак.тер.)": "",
+		"Учебная ауд.-": "Кабинет №",
+		"РДЛЦ при КГМА, 3 этаж, Учебный каб.- ": "Медцентр КГМА (по Тыныстанова), 401 кабинет",
+        "клин.Ахунбаева, 2 этаж, Лекц.зал-БХЗ (проп.хир.)": "Национальный госпиталь (Тоголок Молдо 1/13)",
+        "Пропедевтика внутренних болезней (фак.тер)": "Пропедевтика внутренних болезней"
 		// "Большой морфологич.лекц.зал": "БМЗ"
     };
 
@@ -46,8 +55,14 @@ document.addEventListener("DOMContentLoaded", function() {
         while(node = walker.nextNode()) {
             for(const key in overrides){
                 if(!overrides[key].includes('<')) { // только для текстовых замен
-                    const regex = new RegExp(key, "g");
-                    node.nodeValue = node.nodeValue.replace(regex, overrides[key]);
+                    function escapeRegExp(string) {
+						return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+					}
+
+					const safeKey = escapeRegExp(key);
+					const regex = new RegExp(safeKey, "g");
+					node.nodeValue = node.nodeValue.replace(regex, overrides[key]);
+
                 }
             }
         }
