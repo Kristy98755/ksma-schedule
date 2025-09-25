@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Для глобальных замен используем только текст
     const overrides = {
         // "НИРС": "Физика <br><i style='color:green;'>лаб. работа</i>",
-        // "НИРС": "<a href='https://example.com'>анатомия (ссылка)</a>",
+        "Лучевая диагностика": "<a href='https://chatgpt.com/share/68d51f67-d684-800b-ae86-b0d2f639597c'>Лучевая диагностика</a>",
         // глобальная замена текста по всему html
         // "а": "Ж"
 		// "Большой морфологич.лекц.зал": "БМЗ"

@@ -11,7 +11,7 @@ body {
     color: #32465a;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
-    background-image: url('mikuHigh.png');
+    background-image: url('https://i.postimg.cc/sXHYB2M0/0e7c67fa07a71a920d992cf27a417776.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -20,7 +20,7 @@ body {
 
 @media (orientation: landscape) {
     body {
-        background-image: url('mikuWide.png');
+        background-image: url('https://i.postimg.cc/BZMqW02w/image.png');
     }
 }
 
@@ -74,7 +74,7 @@ body {
 
 /* Секция расписания */
 .schedule__table {
-    margin: 40px;
+    margin: 40px 10px;
     padding: 0;
     list-style: none;
 }
