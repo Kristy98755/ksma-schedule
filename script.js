@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		
         // "НИРС": "Физика <br><i style='color:green;'>лаб. работа</i>",
 		// "": "",
-		"Клиническая биохимия": "<a href='https://jumpshare.com/share/37mbNQRsPscLlPmKkj1A'>Клиническая биохимия</a>",
+		"Клиническая биохимия ": "<a href='https://jumpshare.com/share/37mbNQRsPscLlPmKkj1A'>Клиническая биохимия</a>",
 		"(пат.физ.)": "",
 		"(луч.д.)": "",
 		"(пат.анат.)": "",
@@ -173,5 +173,6 @@ document.addEventListener("DOMContentLoaded", function() {
         nextWeekEl.style.display = "block";
     };
 });
+
 
 
