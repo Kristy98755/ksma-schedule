@@ -4,29 +4,31 @@ document.addEventListener("DOMContentLoaded", function() {
     const nextWeekEl = document.getElementById("NextWeek");
 
     // 🔹 Overrides: ключ → значение
-    // Если значение содержит HTML, оно вставляется через innerHTML
-    // Для глобальных замен используем только текст
+    // Формат ключей:
+    // "Предмет|Тип|Неделя" → конкретная неделя + тип
+    // "Предмет|Тип" → любой неделя
+    // "Предмет" → глобально
     const overrides = {
 		
-        // "НИРС": "Физика <br><i style='color:green;'>лаб. работа</i>",
-		// "": "",
-		"Морфо.корпус, 1 этаж,": "Морфокорпус,",
-		"Патологическая анатомия": "<a href='https://jumpshare.com/share/ksMMPvfZbsdFOBqlK2DU'>Патологическая анатомия</a>",
-		"Клиническая биохимия ": "<a href='https://jumpshare.com/share/37mbNQRsPscLlPmKkj1A'>Клиническая биохимия</a>",
-		"(пат.физ.)": "",
-		"(луч.д.)": "",
-		"(пат.анат.)": "",
-        "Лучевая диагностика": "<a href='https://chatgpt.com/share/68d51f67-d684-800b-ae86-b0d2f639597c'>Лучевая диагностика</a>",
-        "Большой морфологич.лекц.зал": "БМЗ",
-		"311 (фак.тер.)": "",
-		"Учебная ауд.-": "кабинет №",
-		"РДЛЦ при КГМА, 3 этаж, Учебный каб.- ": "Медцентр КГМА (по Тыныстанова), 401 кабинет",
+		// GLOBAL
+		"Большой морфологич.лекц.зал": "БМЗ",
+        "311 (фак.тер.)": "",
+        "Учебная ауд.-": "кабинет №",
+        "РДЛЦ при КГМА, 3 этаж, Учебный каб.- ": "Медцентр КГМА (по Тыныстанова), 401 кабинет",
         "клин.Ахунбаева, 2 этаж, Лекц.зал-БХЗ (проп.хир.)": "Национальный госпиталь (Тоголок Молдо 1/13)",
-        "Пропедевтика внутренних болезней (фак.тер)": "<a href='https://jumpshare.com/share/FjHF0OFfd47Z3eOQqXPi'>Пропедевтика внутренних болезней</a>"
+		"Клиническая биохимия|Практика": "<a href='https://jumpshare.com/share/37mbNQRsPscLlPmKkj1A'>Клиническая биохимия</a>",
+		"(общ.г.)": "",
+		"Кафедра: Общей гигиены": "4 корпус (вход справа), кабинет №325",
+
 		
+		// TARGETED
+		"Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr'>Общая гигиена</a>",
+        // "Патологическая анатомия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/ksMMPvfZbsdFOBqlK2DU'>Патологическая анатомия</a>",
+        // "Лучевая диагностика": "<a href='https://chatgpt.com/share/68d51f67-d684-800b-ae86-b0d2f639597c'>Лучевая диагностика</a>",
+        
+        // "Пропедевтика внутренних болезней (фак.тер)": "<a href='https://jumpshare.com/share/FjHF0OFfd47Z3eOQqXPi'>Пропедевтика внутренних болезней</a>"
     };
 
-    // Определяем понедельник недели
     function getMonday(d) {
         d = new Date(d);
         const day = d.getDay();
@@ -37,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function formatDate(d) {
         let month = d.getMonth() + 1;
         let day = d.getDate();
-        return `${d.getFullYear()}-${month < 10 ? "0"+month : month}-${day < 10 ? "0"+day : day}`;
+        return `${d.getFullYear()}-${month<10?"0"+month:month}-${day<10?"0"+day:day}`;
     }
 
     function capitalizeFirst(str) {
@@ -51,38 +53,56 @@ document.addEventListener("DOMContentLoaded", function() {
         return `Расписание с ${startDate.toLocaleDateString("ru-RU", options)} по ${endDate.toLocaleDateString("ru-RU", options)}`;
     }
 
-    // Глобальные текстовые замены
-    function applyGlobalOverrides(container, overrides) {
+    // 🔹 Контекстный override по предмету, типу и неделе
+    function applyOverride(span, weekId) {
+        const text = span.textContent.trim();
+        const typeSpan = span.parentElement.querySelector(".lesson__type");
+        const type = typeSpan ? typeSpan.textContent.trim() : "";
+
+        const keysToCheck = [
+            `${text}|${type}|${weekId}`,
+            `${text}|${type}`,
+            `${text}`
+        ];
+
+        for (const key of keysToCheck) {
+            if (overrides[key]) {
+                span.innerHTML = overrides[key]; // HTML вставляем через innerHTML
+                return;
+            }
+        }
+    }
+
+    function applyOverridesToWeek(container, weekId) {
+        const lessons = container.querySelectorAll(".lesson__name");
+        lessons.forEach(span => applyOverride(span, weekId));
+    }
+
+    // Глобальные текстовые замены (по всему HTML)
+    function applyGlobalOverrides(container) {
         const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
         let node;
         while(node = walker.nextNode()) {
             for(const key in overrides){
-                if(!overrides[key].includes('<')) { // только для текстовых замен
+                if(!overrides[key].includes('<')) {
                     function escapeRegExp(string) {
-						return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-					}
-
-					const safeKey = escapeRegExp(key);
-					const regex = new RegExp(safeKey, "g");
-					node.nodeValue = node.nodeValue.replace(regex, overrides[key]);
-
+                        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                    }
+                    const safeKey = escapeRegExp(key);
+                    const regex = new RegExp(safeKey, "g");
+                    node.nodeValue = node.nodeValue.replace(regex, overrides[key]);
                 }
             }
         }
     }
 
-    // Подгружаем расписание недели
-    function loadWeek(monday, container, weekSpanId) {
+    // Загрузка недели
+    function loadWeek(monday, container, weekId) {
         const url = `https://ksma-schedule.itismynickname9.workers.dev/proxy/${groupId}/${formatDate(monday)}/get`;
 
         fetch(url)
             .then(res => res.json())
             .then(data => {
-                const weekSpan = document.getElementById(weekSpanId);
-                if(weekSpan) {
-                    weekSpan.textContent = formatWeekRange(monday);
-                }
-
                 container.innerHTML = "";
                 const scheduleTable = document.createElement("ul");
                 scheduleTable.className = "schedule__table";
@@ -117,12 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                         const nameSpan = document.createElement("span");
                         nameSpan.className = "lesson__name";
-                        // Если в overrides есть HTML, вставляем через innerHTML
-                        if(overrides[lesson.d]) {
-                            nameSpan.innerHTML = overrides[lesson.d];
-                        } else {
-                            nameSpan.textContent = lesson.d;
-                        }
+                        nameSpan.textContent = lesson.d;
                         paramsDiv.appendChild(nameSpan);
 
                         const typeSpan = document.createElement("span");
@@ -147,8 +162,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 container.appendChild(scheduleTable);
 
-                // Таймаут для глобальных замен, чтобы картинки успели прогрузиться
-                setTimeout(() => applyGlobalOverrides(container, overrides), 300);
+                // 🔹 Таймаут для глобальных замен и overrides
+                setTimeout(() => {
+                    applyGlobalOverrides(container);
+                    applyOverridesToWeek(container, weekId);
+                }, 300);
             })
             .catch(err => {
                 container.innerHTML = "<p style='color:red; text-align:center;'>Не удалось загрузить расписание</p>";
@@ -161,8 +179,8 @@ document.addEventListener("DOMContentLoaded", function() {
     nextMonday.setDate(nextMonday.getDate() + 7);
 
     // Сразу загружаем обе недели
-    loadWeek(monday, currWeekEl, "week");
-    loadWeek(nextMonday, nextWeekEl, "week-next");
+    loadWeek(monday, currWeekEl, "CurrWeek");
+    loadWeek(nextMonday, nextWeekEl, "NextWeek");
     nextWeekEl.style.display = "none";
 
     // Переключение недель
@@ -175,6 +193,3 @@ document.addEventListener("DOMContentLoaded", function() {
         nextWeekEl.style.display = "block";
     };
 });
-
-
-
