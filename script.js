@@ -16,13 +16,13 @@ document.addEventListener("DOMContentLoaded", function() {
         "Учебная ауд.-": "кабинет №",
         "РДЛЦ при КГМА, 3 этаж, Учебный каб.- ": "Медцентр КГМА (по Тыныстанова), 401 кабинет",
         "клин.Ахунбаева, 2 этаж, Лекц.зал-БХЗ (проп.хир.)": "Национальный госпиталь (Тоголок Молдо 1/13)",
-		"Клиническая биохимия|Практика": "<a href='https://jumpshare.com/share/37mbNQRsPscLlPmKkj1A'>Клиническая биохимия</a>",
+		"Клиническая биохимия|Практика": "<a href='https://jumpshare.com/share/37mbNQRsPscLlPmKkj1A' target='_blank'>Клиническая биохимия</a>",
 		"(общ.г.)": "",
 		"Кафедра: Общей гигиены": "4 корпус (вход справа), кабинет №325",
 
 		
 		// TARGETED
-		"Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr'>Общая гигиена</a>",
+		"Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr' target='_blank'>Общая гигиена</a>",
         // "Патологическая анатомия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/ksMMPvfZbsdFOBqlK2DU'>Патологическая анатомия</a>",
         // "Лучевая диагностика": "<a href='https://chatgpt.com/share/68d51f67-d684-800b-ae86-b0d2f639597c'>Лучевая диагностика</a>",
         
