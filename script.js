@@ -18,16 +18,23 @@ document.addEventListener("DOMContentLoaded", function() {
         "клин.Ахунбаева, 2 этаж, Лекц.зал-БХЗ (проп.хир.)": "Национальный госпиталь (Тоголок Молдо 1/13)",
 		"(общ.г.)": "",
 		"Кафедра: Общей гигиены": "4 корпус (вход справа), кабинет №325",
+		"Гл. корпус, 4 этаж, кабинет №425 (биохим.)": "Главный корпус, кабинет №432",
+		"ЦТиРК, 5 этаж, Учеб.ауд.-516 (мни)": "Центр тестирования, цокольный этаж",
+		"Гл.корпус, 1эт., Лекц.зал №1": "ЛЗ1",
+		"Морфо.корпус, 1 этаж, кабинет №114 (пат.анат.)": "Морфокорпус, кабинет №114",
 
 		
 		// TARGETED
-		"Клиническая биохимия|Практика|NextWeek": "<a href='https://jumpshare.com/share/mGKaxdNZ5G7TGIFHOpZf' target='_blank'>Клиническая биохимия</a>",
-
-		"Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr' target='_blank'>Общая гигиена</a>",
-        // "Патологическая анатомия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/ksMMPvfZbsdFOBqlK2DU'>Патологическая анатомия</a>",
-        // "Лучевая диагностика": "<a href='https://chatgpt.com/share/68d51f67-d684-800b-ae86-b0d2f639597c'>Лучевая диагностика</a>",
-        
-        // "Пропедевтика внутренних болезней (фак.тер)": "<a href='https://jumpshare.com/share/FjHF0OFfd47Z3eOQqXPi'>Пропедевтика внутренних болезней</a>"
+		
+		// CURRENT WEEK
+		"Клиническая биохимия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/mGKaxdNZ5G7TGIFHOpZf' target='_blank'>Клиническая биохимия</a>",
+		"Общая гигиена|Практика|CurrWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr' target='_blank'>Общая гигиена</a>",
+		
+		
+		
+		// NEXT WEEK
+        "Клиническая биохимия|Практика|NextWeek": "<a href='https://jumpshare.com/share/Vtj3G9a2IRZP3lIKZ0sB' target='_blank'>Клиническая биохимия</a>",
+		"Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>" 
     };
 
     function getMonday(d) {
