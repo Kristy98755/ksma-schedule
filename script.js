@@ -194,10 +194,14 @@ document.addEventListener("DOMContentLoaded", function() {
     // Переключение недель
     document.getElementById("cur").onclick = () => {
         currWeekEl.style.display = "block";
+		cur.style.backgroundColor = "#27a8e7dd";
         nextWeekEl.style.display = "none";
+		next.style.backgroundColor = "#bbdd";
     };
     document.getElementById("next").onclick = () => {
         currWeekEl.style.display = "none";
+		next.style.backgroundColor = "#27a8e7dd";
         nextWeekEl.style.display = "block";
+		cur.style.backgroundColor = "#bbdd";
     };
 });

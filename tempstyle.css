@@ -9,7 +9,7 @@ a {
     -webkit-text-stroke: 0.5px #007eff;
     font-weight: bold;
     text-shadow: 0 0 5px #000000;
-}
+	}
 
 
 body {
@@ -61,7 +61,7 @@ body {
 .week-btn.active,
 .week-btn:hover {
     border-bottom: 0;
-    color: #32465a;
+    color: #324;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     background-color: #bbdd;
@@ -100,6 +100,7 @@ body {
     text-shadow: 0 0 4px #fff, 0 0 4px #fff, 0 0 4px #fff;
     color: #000;
     font-weight: 600;
+	font-size: 16px;
 }
 
 .schedule__lessons {
