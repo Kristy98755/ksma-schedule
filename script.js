@@ -4,39 +4,37 @@ document.addEventListener("DOMContentLoaded", function() {
     const nextWeekEl = document.getElementById("NextWeek");
 
     // 🔹 Overrides: ключ → значение
-    // Формат ключей:
-    // "Предмет|Тип|Неделя" → конкретная неделя + тип
-    // "Предмет|Тип" → любой неделя
-    // "Предмет" → глобально
     const overrides = {
-		
-		// GLOBAL
-		"Большой морфологич.лекц.зал": "БМЗ",
+
+        // GLOBAL
+        "Большой морфологич.лекц.зал": "БМЗ",
         "311 (фак.тер.)": "",
         "Учебная ауд.-": "кабинет №",
         "РДЛЦ при КГМА, 3 этаж, Учебный каб.- ": "Медцентр КГМА (по Тыныстанова), 401 кабинет",
-        "клин.Ахунбаева, 2 этаж, Лекц.зал-БХЗ (проп.хир.)": "Национальный госпиталь (Тоголок Молдо 1/13)",
-		"(общ.г.)": "",
-		"Кафедра: Общей гигиены": "4 корпус (вход справа), кабинет №325",
-		"Гл. корпус, 4 этаж, кабинет №425 (биохим.)": "Главный корпус, кабинет №432",
-		"ЦТиРК, 5 этаж, Учеб.ауд.-516 (мни)": "Центр тестирования, цокольный этаж",
-		"Гл.корпус, 1эт., Лекц.зал №1": "ЛЗ1",
-		"Морфо.корпус, 1 этаж, кабинет №114 (пат.анат.)": "Морфокорпус, кабинет №114",
+        "клин.Ахунбаева, 3 этаж, Каб.зав.каф.-301 (проп.хир)": "<a href='https://go.2gis.com/vTyEj' target='_blank' style='color:green; text-shadow:none; -webkit-text-stroke:0;'>Национальный госпиталь (Тоголок Молдо 1/13)</a>",
+        "клин.Ахунбаева, 2 этаж, Лекц.зал-БХЗ (проп.хир.)": "<a href='https://go.2gis.com/vTyEj' target='_blank' style='color:green; text-shadow:none; -webkit-text-stroke:0;'>Национальный госпиталь (Тоголок Молдо 1/13)</a>",
+        "(общ.г.)": "",
+        "Кафедра: Общей гигиены": "4 корпус (вход справа), кабинет №325",
+        "Гл. корпус, 4 этаж, кабинет №425 (биохим.)": "Главный корпус, кабинет №432",
+        "ЦТиРК, 5 этаж, Учеб.ауд.-516 (мни)": "Центр тестирования, цокольный этаж",
+        "Гл.корпус, 1эт., Лекц.зал №1": "ЛЗ1",
+        "Морфо.корпус, 1 этаж, кабинет №114 (пат.анат.)": "Морфокорпус, кабинет №114",
+        "Кафедра: Нормальной и топографической анатомии": "Морфокорпус, кабинет №409",
 
-		
-		// TARGETED
-		
-		// CURRENT WEEK
-		"Клиническая биохимия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/mGKaxdNZ5G7TGIFHOpZf' target='_blank'>Клиническая биохимия</a>",
-		"Общая гигиена|Практика|CurrWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr' target='_blank'>Общая гигиена</a>",
-		"Топографическая анатомия|Практика|CurrWeek": "<a href='https://chatgpt.com/share/68da1b47-05b8-800b-a282-c820fbc39c90' target='_blank'>Топографическая анатомия</a>",
-		
-		
-		// NEXT WEEK
+        // TARGETED
+
+        // CURRENT WEEK
+        "Клиническая биохимия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/mGKaxdNZ5G7TGIFHOpZf' target='_blank'>Клиническая биохимия</a>",
+        "Общая гигиена|Практика|CurrWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr' target='_blank'>Общая гигиена</a>",
+        "Топографическая анатомия|Практика|CurrWeek": "<a href='https://chatgpt.com/share/68da1b47-05b8-800b-a282-c820fbc39c90' target='_blank'>Топографическая анатомия</a>",
+        "Пропедевтика хирургических болезней|Практика|CurrWeek": "<a href='https://jumpshare.com/share/syI8ek5svsVR2PXNsERj' target='_blank'>Пропедхирургия</a>",
+
+        // NEXT WEEK
         "Клиническая биохимия|Практика|NextWeek": "<a href='https://jumpshare.com/share/Vtj3G9a2IRZP3lIKZ0sB' target='_blank'>Клиническая биохимия</a>",
-		"Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>" 
+        "Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>"
     };
 
+    // --- Утилиты ---
     function getMonday(d) {
         d = new Date(d);
         const day = d.getDay();
@@ -54,18 +52,13 @@ document.addEventListener("DOMContentLoaded", function() {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
-    function formatWeekRange(startDate) {
-        const options = { day: "numeric", month: "long" };
-        const endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 6);
-        return `Расписание с ${startDate.toLocaleDateString("ru-RU", options)} по ${endDate.toLocaleDateString("ru-RU", options)}`;
-    }
-
-    // 🔹 Контекстный override по предмету, типу и неделе
+    // --- Overrides ---
     function applyOverride(span, weekId) {
         const text = span.textContent.trim();
         const typeSpan = span.parentElement.querySelector(".lesson__type");
         const type = typeSpan ? typeSpan.textContent.trim() : "";
+
+        console.log(`[CHECK OVERRIDE] "${text}" | type="${type}" | week="${weekId}"`);
 
         const keysToCheck = [
             `${text}|${type}|${weekId}`,
@@ -75,7 +68,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
         for (const key of keysToCheck) {
             if (overrides[key]) {
-                span.innerHTML = overrides[key]; // HTML вставляем через innerHTML
+                console.log(`[APPLY OVERRIDE] ${key} → ${overrides[key]}`);
+                span.innerHTML = overrides[key];
+                return;
+            }
+        }
+        console.log(`[NO MATCH] "${text}"`);
+    }
+
+    function applyOverrideToPlace(span) {
+        if (!span) return;
+        const text = span.textContent.replace(/\s*^<i.*<\/i>/, '').trim(); // убираем иконку
+        const keysToCheck = [text, text.replace(/\./g, '')]; // можно расширить под нужные варианты
+
+        for (const key of keysToCheck) {
+            if (overrides[key]) {
+                console.log(`[PLACE OVERRIDE] "${text}" → ${overrides[key]}`);
+                span.innerHTML = overrides[key];
                 return;
             }
         }
@@ -84,27 +93,38 @@ document.addEventListener("DOMContentLoaded", function() {
     function applyOverridesToWeek(container, weekId) {
         const lessons = container.querySelectorAll(".lesson__name");
         lessons.forEach(span => applyOverride(span, weekId));
+
+        const places = container.querySelectorAll(".lesson__place");
+        places.forEach(span => applyOverrideToPlace(span));
     }
 
-    // Глобальные текстовые замены (по всему HTML)
+    // 🔹 Глобальные текстовые замены
     function applyGlobalOverrides(container) {
         const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
         let node;
-        while(node = walker.nextNode()) {
-            for(const key in overrides){
-                if(!overrides[key].includes('<')) {
-                    function escapeRegExp(string) {
-                        return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        while (node = walker.nextNode()) {
+            for (const key in overrides) {
+                const safeKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                const regex = new RegExp(safeKey, "g");
+
+                if (regex.test(node.nodeValue)) {
+                    const replacement = overrides[key];
+                    if (replacement.includes("<")) {
+                        console.log(`[GLOBAL HTML] "${node.nodeValue}" → "${replacement}"`);
+                        const range = document.createRange();
+                        range.selectNodeContents(node);
+                        const frag = range.createContextualFragment(node.nodeValue.replace(regex, replacement));
+                        node.parentNode.replaceChild(frag, node);
+                    } else {
+                        console.log(`[GLOBAL TEXT] "${node.nodeValue}" → "${replacement}"`);
+                        node.nodeValue = node.nodeValue.replace(regex, replacement);
                     }
-                    const safeKey = escapeRegExp(key);
-                    const regex = new RegExp(safeKey, "g");
-                    node.nodeValue = node.nodeValue.replace(regex, overrides[key]);
                 }
             }
         }
     }
 
-    // Загрузка недели
+    // --- Загрузка недели ---
     function loadWeek(monday, container, weekId) {
         const url = `https://ksma-schedule.itismynickname9.workers.dev/proxy/${groupId}/${formatDate(monday)}/get`;
 
@@ -170,7 +190,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 container.appendChild(scheduleTable);
 
-                // 🔹 Таймаут для глобальных замен и overrides
                 setTimeout(() => {
                     applyGlobalOverrides(container);
                     applyOverridesToWeek(container, weekId);
@@ -186,22 +205,20 @@ document.addEventListener("DOMContentLoaded", function() {
     const nextMonday = new Date(monday);
     nextMonday.setDate(nextMonday.getDate() + 7);
 
-    // Сразу загружаем обе недели
     loadWeek(monday, currWeekEl, "CurrWeek");
     loadWeek(nextMonday, nextWeekEl, "NextWeek");
     nextWeekEl.style.display = "none";
 
-    // Переключение недель
     document.getElementById("cur").onclick = () => {
         currWeekEl.style.display = "block";
-		cur.style.backgroundColor = "#27a8e7dd";
+        cur.style.backgroundColor = "#27a8e7dd";
         nextWeekEl.style.display = "none";
-		next.style.backgroundColor = "#bbdd";
+        next.style.backgroundColor = "#bbdd";
     };
     document.getElementById("next").onclick = () => {
         currWeekEl.style.display = "none";
-		next.style.backgroundColor = "#27a8e7dd";
+        next.style.backgroundColor = "#27a8e7dd";
         nextWeekEl.style.display = "block";
-		cur.style.backgroundColor = "#bbdd";
+        cur.style.backgroundColor = "#bbdd";
     };
 });
