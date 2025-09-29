@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		// CURRENT WEEK
 		"Клиническая биохимия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/mGKaxdNZ5G7TGIFHOpZf' target='_blank'>Клиническая биохимия</a>",
 		"Общая гигиена|Практика|CurrWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr' target='_blank'>Общая гигиена</a>",
-		"Топографическая анатомия|Практика|CurrWeek": "<a href='https://chatgpt.com/share/68da1b47-05b8-800b-a282-c820fbc39c90' target='_blank'>Топографическая анатомия</a>
+		"Топографическая анатомия|Практика|CurrWeek": "<a href='https://chatgpt.com/share/68da1b47-05b8-800b-a282-c820fbc39c90' target='_blank'>Топографическая анатомия</a>",
 		
 		
 		// NEXT WEEK
