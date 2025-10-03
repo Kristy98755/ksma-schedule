@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // NEXT WEEK
         "Клиническая биохимия|Практика|NextWeek": "<a href='https://jumpshare.com/share/Vtj3G9a2IRZP3lIKZ0sB' target='_blank'>Клиническая биохимия</a>",
         "Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>"
-		"Патологическая анатомия|Практика|NextWeek":"<a href='https://jumpshare.com/share/zrUZiGuQWqKXtCVVJYpM' target='_blank'>Патологическая анатомия</a>",
+		"Патологическая анатомия|Практика|NextWeek":"<a href='https://jumpshare.com/share/zrUZiGuQWqKXtCVVJYpM' target='_blank'>Патологическая анатомия</a>"
 
     };
 
