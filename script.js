@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
 		"Патологическая анатомия|Практика|CurrWeek":"<a href='https://jumpshare.com/share/ksMMPvfZbsdFOBqlK2DU' target='_blank'>Патологическая анатомия</a>",
         // NEXT WEEK
         "Клиническая биохимия|Практика|NextWeek": "<a href='https://jumpshare.com/share/Vtj3G9a2IRZP3lIKZ0sB' target='_blank'>Клиническая биохимия</a>",
-        "Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>"
+        "Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>",
 		"Патологическая анатомия|Практика|NextWeek":"<a href='https://jumpshare.com/share/zrUZiGuQWqKXtCVVJYpM' target='_blank'>Патологическая анатомия</a>"
 
     };
