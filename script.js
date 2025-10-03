@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
         "Пропедевтика хирургических болезней|Практика|CurrWeek": "<a href='https://jumpshare.com/share/syI8ek5svsVR2PXNsERj' target='_blank'>Пропедхирургия</a>",
 		"Лучевая диагностика|Практика|CurrWeek":"<a href='https://chatgpt.com/s/t_68de359569408191b94740fafc98bcbb' target='_blank'>Лучевая диагностика</a>",
 "Пропедевтика внутренних болезней (фак.тер)|Практика|CurrWeek":"<a href='https://jumpshare.com/share/3ZpZ5Ock4DOQglAmjQfs'target='_blank'>Пропедевтика внутренних болезней</a>",
-
+"Патологическая анатомия|Практика|CurrWeek":"<a href='https://jumpshare.com/share/ksMMPvfZbsdFOBqlK2DU' target='_blank'>Патологическая анатомия</a>",
         // NEXT WEEK
         "Клиническая биохимия|Практика|NextWeek": "<a href='https://jumpshare.com/share/Vtj3G9a2IRZP3lIKZ0sB' target='_blank'>Клиническая биохимия</a>",
         "Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>"
