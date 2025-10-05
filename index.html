@@ -55,15 +55,17 @@ a:hover {
 <p>Пожалуйста, удалите эту версию и установите новую:</p>
 
 <p>
-  <a href="intent://github.com/Kristy98755/ksma-schedule-23gr/releases/tag/APK#Intent;scheme=https;end">
-    🔗 Открыть страницу новой версии
-  </a>
-</p>
+  <a id="open" href="https://github.com/Kristy98755/ksma-schedule-23gr/releases/tag/APK">
+  🔗 Открыть страницу новой версии
+</a>
+</P>
 
 <script>
-  // Резерв: если intent:// не сработает, откроем через обычный window.open
+  // Автоматически открыть внешним браузером, если WebView это позволяет
   setTimeout(() => {
-    window.open('https://github.com/Kristy98755/ksma-schedule-23gr/releases/tag/APK', '_blank');
+    const url = "https://github.com/Kristy98755/ksma-schedule-23gr/releases/tag/APK";
+    // Этот вызов часто вызывает системный браузер, если WebView не поддерживает window.open
+    window.location.href = url;
   }, 7000);
 </script>
 
