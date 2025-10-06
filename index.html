@@ -1,59 +1,75 @@
-<html lang="ru">
+<html>
 <head>
-    <meta charset="utf-8">
-    <title>Расписание</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    
-    <!-- Styles -->
-    <link rel="stylesheet" href="tempstyle.css" type="text/css">
-	<link rel="icon" href="favicon.ico">
-    <script src="script.js" defer></script>
+<meta charset="UTF-8">
+<title>Приложение устарело</title>
+<style>
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #0ff;
+	color: #000;
+	font-family: sans-serif;
+	display: flex;
+	flex-direction: column;   /* 👉 вертикальное выравнивание */
+	align-items: center;      /* центр по горизонтали */
+	justify-content: center;  /* центр по вертикали */
+	text-align: center;
+}
 
-    <style>
-       <style>
-		/* По умолчанию — вертикальный фон */
-		body {
-			background-image: url('https://i.postimg.cc/sXHYB2M0/0e7c67fa07a71a920d992cf27a417776.jpg');
-			background-size: cover;
-			background-position: center;
-			background-repeat: no-repeat;
-			background-attachment: fixed;
-		}
+h2 {
+	font-size: 8vw;  /* крупный заголовок */
+	margin: 0.3em 0;
+}
 
-		/* Горизонтальная ориентация (landscape) */
-		@media (orientation: landscape) {
-			body {
-				background-image: url('https://i.postimg.cc/BZMqW02w/image.png');
-			}
-		}
-		</style>
+p {
+	font-size: 4vw;
+	margin: 0.5em 0;
+	max-width: 90vw; /* чтобы не выходил за экран */
+	line-height: 1.3;
+}
+
+a {
+	display: inline-block;
+	margin-top: 0.5em;
+	padding: 0.5em 1em;
+	font-size: 4vw;
+	color: #000;
+	background: #fff;
+	border-radius: 12px;
+	text-decoration: none;
+	font-weight: bold;
+	box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	transition: 0.3s;
+}
+
+a:hover {
+	background: #000;
+	color: #0ff;
+}
+</style>
 </head>
 <body>
-<section class="content container">
-    <span class="page-item__title">Расписание занятий</span>
-    <section class="schedule full">
-        <div class="schedule__data" style="display: block;">
-            <div class="row center week-tb">
-                <div class="week-btn active" id="cur">Текущая неделя</div>
-                <div class="week-btn active" id="next">Следующая неделя</div>
-            </div>
 
-            <!-- Текущая неделя -->
-            <div id="CurrWeek">
-                <span id="week"></span>
-                <ul class="schedule__table"></ul>
-            </div>
+<h2>Приложение устарело</h2>
+<p>Пожалуйста, удалите эту версию и установите новую:</p>
 
-            <!-- Следующая неделя -->
-            <div id="NextWeek" style="display: none;">
-                <span id="week-next"></span>
-                <!-- <p align="center" style="font-size:24px; color:red;"> -->
-                    <!-- Не готово. Для ускорения разработки требуется дополнительное финансирование -->
-                <!-- </p> -->
-            </div>
-        </div>
-    </section>
-</section>
-<div style="height: 50px;"></div>
+<p>
+  <a id="open" href="https://github.com/Kristy98755/ksma-schedule-23gr/releases/tag/APK">
+  🔗 Открыть страницу новой версии
+</a>
+</P>
+
+<script>
+  // Автоматически открыть внешним браузером, если WebView это позволяет
+  setTimeout(() => {
+    const url = "https://github.com/Kristy98755/ksma-schedule-23gr/releases/tag/APK";
+    // Этот вызов часто вызывает системный браузер, если WebView не поддерживает window.open
+    window.location.href = url;
+  }, 7000);
+</script>
+
+<p>После установки вы можете удалить это приложение.</p>
+
 </body>
 </html>
