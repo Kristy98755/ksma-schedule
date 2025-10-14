@@ -20,18 +20,14 @@ body {
     color: #32465a;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
-    background-image: url('https://i.postimg.cc/sXHYB2M0/0e7c67fa07a71a920d992cf27a417776.jpg');
+    background-image: url('https://i.postimg.cc/2SMc6f1Q/image.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
 
-@media (orientation: landscape) {
-    body {
-        background-image: url('https://i.postimg.cc/BZMqW02w/image.png');
-    }
-}
+
 
 /* Заголовок страницы */
 .page-item__title {
@@ -209,11 +205,18 @@ body {
     }
 
 
+/* .week-tb { */
+    /* display: table; */
+    /* margin: 0 auto; */
+    /* position: relative */
+/* } */
 .week-tb {
-    display: table;
+    display: none; /* скрываем */
     margin: 0 auto;
-    position: relative
+    position: relative;
+    z-index: 20;
 }
+
 
 #cur {
 	background-color:#27a8e7dd;

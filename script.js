@@ -1,230 +1,266 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const groupId = 51; // ID группы
-    const currWeekEl = document.getElementById("CurrWeek");
-    const nextWeekEl = document.getElementById("NextWeek");
+document.addEventListener("DOMContentLoaded", async function() {
+  const proxy = "https://ksma-schedule.itismynickname9.workers.dev";
+  const currWeekEl = document.getElementById("CurrWeek");
+  const nextWeekEl = document.getElementById("NextWeek");
+  const weekBtns = {
+    cur: document.getElementById("cur"),
+    next: document.getElementById("next")
+  };
 
-    // 🔹 Overrides: ключ → значение
-    const overrides = {
+  const cur = weekBtns.cur;
+  const next = weekBtns.next;
 
-        // GLOBAL
-        "Большой морфологич.лекц.зал": "БМЗ",
-        "311 (фак.тер.)": "",
-        "Учебная ауд.-": "кабинет №",
-        "РДЛЦ при КГМА, 3 этаж, Учебный каб.- 311 (фак.тер.)": "Медцентр КГМА (по Тыныстанова), 401 кабинет",
-"Конференц холл":"БМЗ",
-        "клин.Ахунбаева, 3 этаж, Каб.зав.каф.-301 (проп.хир)": "<a href='https://go.2gis.com/vTyEj' target='_blank' style='color:green; text-shadow:none; -webkit-text-stroke:0;'>Национальный госпиталь (Тоголок Молдо 1/13)</a>",
-        "клин.Ахунбаева, 2 этаж, Лекц.зал-БХЗ (проп.хир.)": "<a href='https://go.2gis.com/vTyEj' target='_blank' style='color:green; text-shadow:none; -webkit-text-stroke:0;'>Национальный госпиталь (Тоголок Молдо 1/13)</a>",
-        "(общ.г.)": "",
-        "Кафедра: Общей гигиены": "4 корпус (вход справа), кабинет №325",
-        "Гл. корпус, 4 этаж, кабинет №425 (биохим.)": "Главный корпус, кабинет №432",
-        "ЦТиРК, 5 этаж, Учеб.ауд.-516 (мни)": "Центр тестирования, цокольный этаж",
-        "Гл.корпус, 1эт., Лекц.зал №1": "ЛЗ1",
-        "Морфо.корпус, 1 этаж, кабинет №114 (пат.анат.)": "Морфокорпус, кабинет №114",
-        "Кафедра: Нормальной и топографической анатомии": "Морфокорпус, кабинет №409",
-		"Мед.центр при КГМА, 1 этаж, Учебная ауд.- 109 (луч.д.)": "Медцентр КГМА (вход возле флюорографии), кабинет №109",
+  // --- Куки ---
+  function setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days*24*60*60*1000));
+    document.cookie = `${name}=${value};path=/;expires=${d.toUTCString()}`;
+    console.log(`[COOKIE SET] ${name}=${value}`);
+  }
 
-        // TARGETED
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    const val = match ? match[2] : null;
+    console.log(`[COOKIE GET] ${name}=${val}`);
+    return val;
+  }
 
-        // CURRENT WEEK
-        "Клиническая биохимия|Практика|CurrWeek": "<a href='https://jumpshare.com/share/mGKaxdNZ5G7TGIFHOpZf' target='_blank'>Клиническая биохимия</a>",
-        "Общая гигиена|Практика|CurrWeek": "<a href='https://jumpshare.com/share/W378sP6WnSnSTv5mmMUr' target='_blank'>Общая гигиена</a>",
-        "Топографическая анатомия|Практика|CurrWeek": "<a href='https://chatgpt.com/share/68da1b47-05b8-800b-a282-c820fbc39c90' target='_blank'>Топографическая анатомия</a>",
-        "Пропедевтика хирургических болезней|Практика|CurrWeek": "<a href='https://jumpshare.com/share/syI8ek5svsVR2PXNsERj' target='_blank'>Пропедхирургия</a>",
-		"Лучевая диагностика|Практика|CurrWeek":"<a href='https://chatgpt.com/s/t_68de359569408191b94740fafc98bcbb' target='_blank'>Лучевая диагностика</a>",
-		"Пропедевтика внутренних болезней (фак.тер)|Практика|CurrWeek":"<a href='https://jumpshare.com/share/3ZpZ5Ock4DOQglAmjQfs'target='_blank'>Пропедевтика внутренних болезней</a>",
-		"Патологическая анатомия|Практика|CurrWeek":"<a href='https://jumpshare.com/share/ksMMPvfZbsdFOBqlK2DU' target='_blank'>Патологическая анатомия</a>",
-        // NEXT WEEK
-        "Клиническая биохимия|Практика|NextWeek": "<a href='https://jumpshare.com/share/Vtj3G9a2IRZP3lIKZ0sB' target='_blank'>Клиническая биохимия</a>",
-        "Общая гигиена|Практика|NextWeek": "<a href='https://jumpshare.com/share/gdZygLaXlUUUKpbJ1pzm' target='_blank'>Общая гигиена</a>",
-		"Патологическая анатомия|Практика|NextWeek":"<a href='https://jumpshare.com/share/zrUZiGuQWqKXtCVVJYpM' target='_blank'>Патологическая анатомия</a>"
+  // --- Утилиты ---
+  function getMonday(d) {
+    d = new Date(d);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  }
 
-    };
+  function formatDate(d) {
+    let m = d.getMonth() + 1, day = d.getDate();
+    return `${d.getFullYear()}-${m<10?"0"+m:m}-${day<10?"0"+day:day}`;
+  }
 
-    // --- Утилиты ---
-    function getMonday(d) {
-        d = new Date(d);
-        const day = d.getDay();
-        const diff = d.getDate() - day + (day === 0 ? -6 : 1);
-        return new Date(d.setDate(diff));
-    }
+  function capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
 
-    function formatDate(d) {
-        let month = d.getMonth() + 1;
-        let day = d.getDate();
-        return `${d.getFullYear()}-${month<10?"0"+month:month}-${day<10?"0"+day:day}`;
-    }
+  function clearSelect(sel, placeholder="—") {
+    sel.innerHTML = `<option>${placeholder}</option>`;
+    sel.disabled = true;
+  }
 
-    function capitalizeFirst(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
+  // --- Загрузка недель ---
+  async function loadWeek(monday, container, weekId, groupId) {
+    const url = `${proxy}/proxy/${groupId}/${formatDate(monday)}/get`;
 
-    // --- Overrides ---
-    function applyOverride(span, weekId) {
-        const text = span.textContent.trim();
-        const typeSpan = span.parentElement.querySelector(".lesson__type");
-        const type = typeSpan ? typeSpan.textContent.trim() : "";
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
 
-        console.log(`[CHECK OVERRIDE] "${text}" | type="${type}" | week="${weekId}"`);
+      container.innerHTML = "";
+      const scheduleTable = document.createElement("ul");
+      scheduleTable.className = "schedule__table";
 
-        const keysToCheck = [
-            `${text}|${type}|${weekId}`,
-            `${text}|${type}`,
-            `${text}`
-        ];
+      for (const dayKey in data) {
+        const day = data[dayKey];
+        const liDay = document.createElement("li");
+        liDay.className = "schedule__day";
 
-        for (const key of keysToCheck) {
-            if (overrides[key]) {
-                console.log(`[APPLY OVERRIDE] ${key} → ${overrides[key]}`);
-                span.innerHTML = overrides[key];
-                return;
-            }
+        const dateSpan = document.createElement("span");
+        dateSpan.className = "schedule__date";
+        const dateObj = new Date(day.d);
+        const opts = { weekday: "long", day: "numeric", month: "long" };
+        dateSpan.textContent = capitalizeFirst(dateObj.toLocaleDateString("ru-RU", opts));
+        liDay.appendChild(dateSpan);
+
+        const lessonsUl = document.createElement("ul");
+        lessonsUl.className = "schedule__lessons";
+
+        for (const lKey in day.l) {
+          const lesson = day.l[lKey];
+          const li = document.createElement("li");
+          li.className = "lesson";
+
+          const time = document.createElement("div");
+          time.className = "lesson__time";
+          time.textContent = lesson.tm;
+          li.appendChild(time);
+
+          const params = document.createElement("div");
+          params.className = "lesson__params";
+
+          const name = document.createElement("span");
+          name.className = "lesson__name";
+          name.textContent = lesson.d;
+          params.appendChild(name);
+
+          const type = document.createElement("span");
+          type.className = "lesson__type";
+          type.textContent = lesson.t;
+          params.appendChild(type);
+
+          if (lesson.r) {
+            const room = document.createElement("span");
+            room.className = "lesson__place";
+            room.innerHTML = `<i class="icon-marker"></i>${lesson.r}`;
+            params.appendChild(room);
+          }
+
+          li.appendChild(params);
+          lessonsUl.appendChild(li);
         }
-        console.log(`[NO MATCH] "${text}"`);
+        liDay.appendChild(lessonsUl);
+        scheduleTable.appendChild(liDay);
+      }
+
+      container.appendChild(scheduleTable);
+    } catch (err) {
+      container.innerHTML = "<p style='color:red;text-align:center;'>Ошибка загрузки расписания</p>";
+      console.error(err);
     }
+  }
 
-    function applyOverrideToPlace(span) {
-        if (!span) return;
-        const text = span.textContent.replace(/\s*^<i.*<\/i>/, '').trim(); // убираем иконку
-        const keysToCheck = [text, text.replace(/\./g, '')]; // можно расширить под нужные варианты
-
-        for (const key of keysToCheck) {
-            if (overrides[key]) {
-                console.log(`[PLACE OVERRIDE] "${text}" → ${overrides[key]}`);
-                span.innerHTML = overrides[key];
-                return;
-            }
-        }
-    }
-
-    function applyOverridesToWeek(container, weekId) {
-        const lessons = container.querySelectorAll(".lesson__name");
-        lessons.forEach(span => applyOverride(span, weekId));
-
-        const places = container.querySelectorAll(".lesson__place");
-        places.forEach(span => applyOverrideToPlace(span));
-    }
-
-    // 🔹 Глобальные текстовые замены
-    function applyGlobalOverrides(container) {
-        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
-        let node;
-        while (node = walker.nextNode()) {
-            for (const key in overrides) {
-                const safeKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-                const regex = new RegExp(safeKey, "g");
-
-                if (regex.test(node.nodeValue)) {
-                    const replacement = overrides[key];
-                    if (replacement.includes("<")) {
-                        console.log(`[GLOBAL HTML] "${node.nodeValue}" → "${replacement}"`);
-                        const range = document.createRange();
-                        range.selectNodeContents(node);
-                        const frag = range.createContextualFragment(node.nodeValue.replace(regex, replacement));
-                        node.parentNode.replaceChild(frag, node);
-                    } else {
-                        console.log(`[GLOBAL TEXT] "${node.nodeValue}" → "${replacement}"`);
-                        node.nodeValue = node.nodeValue.replace(regex, replacement);
-                    }
-                }
-            }
-        }
-    }
-
-    // --- Загрузка недели ---
-    function loadWeek(monday, container, weekId) {
-        const url = `https://ksma-schedule.itismynickname9.workers.dev/proxy/${groupId}/${formatDate(monday)}/get`;
-
-        fetch(url)
-            .then(res => res.json())
-            .then(data => {
-                container.innerHTML = "";
-                const scheduleTable = document.createElement("ul");
-                scheduleTable.className = "schedule__table";
-
-                for(const dayKey in data){
-                    const day = data[dayKey];
-                    const liDay = document.createElement("li");
-                    liDay.className = "schedule__day";
-
-                    const dateSpan = document.createElement("span");
-                    dateSpan.className = "schedule__date";
-                    const dateObj = new Date(day.d);
-                    const options = { weekday: "long", day: "numeric", month: "long" };
-                    dateSpan.textContent = capitalizeFirst(dateObj.toLocaleDateString("ru-RU", options));
-                    liDay.appendChild(dateSpan);
-
-                    const lessonsUl = document.createElement("ul");
-                    lessonsUl.className = "schedule__lessons";
-
-                    for(const lessonKey in day.l){
-                        const lesson = day.l[lessonKey];
-                        const lessonLi = document.createElement("li");
-                        lessonLi.className = "lesson";
-
-                        const timeDiv = document.createElement("div");
-                        timeDiv.className = "lesson__time";
-                        timeDiv.textContent = lesson.tm;
-                        lessonLi.appendChild(timeDiv);
-
-                        const paramsDiv = document.createElement("div");
-                        paramsDiv.className = "lesson__params";
-
-                        const nameSpan = document.createElement("span");
-                        nameSpan.className = "lesson__name";
-                        nameSpan.textContent = lesson.d;
-                        paramsDiv.appendChild(nameSpan);
-
-                        const typeSpan = document.createElement("span");
-                        typeSpan.className = "lesson__type";
-                        typeSpan.textContent = lesson.t;
-                        paramsDiv.appendChild(typeSpan);
-
-                        if(lesson.r){
-                            const placeSpan = document.createElement("span");
-                            placeSpan.className = "lesson__place";
-                            placeSpan.innerHTML = `<i class="icon-marker"></i>${lesson.r}`;
-                            paramsDiv.appendChild(placeSpan);
-                        }
-
-                        lessonLi.appendChild(paramsDiv);
-                        lessonsUl.appendChild(lessonLi);
-                    }
-
-                    liDay.appendChild(lessonsUl);
-                    scheduleTable.appendChild(liDay);
-                }
-
-                container.appendChild(scheduleTable);
-
-                setTimeout(() => {
-                    applyGlobalOverrides(container);
-                    applyOverridesToWeek(container, weekId);
-                }, 300);
-            })
-            .catch(err => {
-                container.innerHTML = "<p style='color:red; text-align:center;'>Не удалось загрузить расписание</p>";
-                console.error(err);
-            });
-    }
-
+  async function loadScheduleByGroup(groupId) {
     const monday = getMonday(new Date());
     const nextMonday = new Date(monday);
     nextMonday.setDate(nextMonday.getDate() + 7);
 
-    loadWeek(monday, currWeekEl, "CurrWeek");
-    loadWeek(nextMonday, nextWeekEl, "NextWeek");
+    await loadWeek(monday, currWeekEl, "CurrWeek", groupId);
+    await loadWeek(nextMonday, nextWeekEl, "NextWeek", groupId);
+
+    // Показываем только текущую неделю по умолчанию
+    currWeekEl.style.display = "block";
     nextWeekEl.style.display = "none";
 
-    document.getElementById("cur").onclick = () => {
-        currWeekEl.style.display = "block";
-        cur.style.backgroundColor = "#27a8e7dd";
-        nextWeekEl.style.display = "none";
-        next.style.backgroundColor = "#bbdd";
-    };
-    document.getElementById("next").onclick = () => {
-        currWeekEl.style.display = "none";
-        next.style.backgroundColor = "#27a8e7dd";
-        nextWeekEl.style.display = "block";
-        cur.style.backgroundColor = "#bbdd";
-    };
+    // Показываем кнопки недель
+    document.querySelector(".week-tb").style.display = "table";
+
+    // Ручная установка цветов кнопок, как у тебя в форке
+    cur.style.backgroundColor = "#27a8e7dd";
+    next.style.backgroundColor = "#bbdd";
+  }
+
+  // --- Переключение недель ---
+  cur.onclick = () => {
+    currWeekEl.style.display = "block";
+    nextWeekEl.style.display = "none";
+
+    cur.style.backgroundColor = "#27a8e7dd";
+    next.style.backgroundColor = "#bbdd";
+  };
+
+  next.onclick = () => {
+    currWeekEl.style.display = "none";
+    nextWeekEl.style.display = "block";
+
+    next.style.backgroundColor = "#27a8e7dd";
+    cur.style.backgroundColor = "#bbdd";
+  };
+
+  // --- Проверяем куки ---
+  const savedGroup = getCookie("selectedGroup");
+  if (savedGroup) {
+    await loadScheduleByGroup(savedGroup);
+  } else {
+    // --- Создание интерфейса выбора, стилизованного под уроки ---
+    const selectorWrap = document.createElement("div");
+    selectorWrap.className = "schedule__lessons";
+    selectorWrap.style.margin = "20px 10px";
+    selectorWrap.style.padding = "15px";
+    selectorWrap.style.borderRadius = "3px";
+
+    selectorWrap.innerHTML = `
+      <div class="lesson">
+        <div class="lesson__time">Факультет:</div>
+        <div class="lesson__params">
+          <select id="faculty" style="width:100%;padding:5px;"></select>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson__time">Курс:</div>
+        <div class="lesson__params">
+          <select id="course" style="width:100%;padding:5px;" disabled></select>
+        </div>
+      </div>
+      <div class="lesson">
+        <div class="lesson__time">Группа:</div>
+        <div class="lesson__params">
+          <select id="group" style="width:100%;padding:5px;" disabled></select>
+        </div>
+      </div>
+      <div class="lesson" style="text-align:center;">
+        <button id="loadSchedule" style="padding:8px 15px;background:#009688;color:white;border:none;border-radius:6px;cursor:pointer;" disabled>
+          Загрузить расписание
+        </button>
+      </div>
+    `;
+
+    document.querySelector(".schedule__data").prepend(selectorWrap);
+
+    const facultySelect = document.getElementById("faculty");
+    const courseSelect = document.getElementById("course");
+    const groupSelect = document.getElementById("group");
+    const loadBtn = document.getElementById("loadSchedule");
+
+    // --- Загрузка факультетов/курсов/групп ---
+    let data = null;
+    try {
+      const res = await fetch(`${proxy}/groups/get`);
+      data = await res.json();
+      facultySelect.innerHTML = `<option value="">Выберите факультет</option>`;
+      for (const f of data.faculty) {
+        const o = document.createElement("option");
+        o.value = f.i;
+        o.textContent = f.n;
+        facultySelect.appendChild(o);
+      }
+    } catch (err) {
+      alert("Не удалось загрузить список факультетов: " + err.message);
+    }
+
+    facultySelect.addEventListener("change", e => {
+      const fid = e.target.value;
+      clearSelect(courseSelect);
+      clearSelect(groupSelect);
+      loadBtn.disabled = true;
+      if (!fid || !data.course[fid]) return;
+
+      const courses = Object.values(data.course[fid]);
+      for (const c of courses) {
+        const opt = document.createElement("option");
+        opt.value = c;
+        opt.textContent = `${c} курс`;
+        courseSelect.appendChild(opt);
+      }
+      courseSelect.disabled = false;
+    });
+
+    courseSelect.addEventListener("change", e => {
+      const fid = facultySelect.value;
+      const cid = e.target.value;
+      clearSelect(groupSelect);
+      loadBtn.disabled = true;
+      const groups = data.groups?.[fid]?.[cid];
+      if (!groups) return;
+
+      for (const gKey in groups) {
+        const g = groups[gKey];
+        const opt = document.createElement("option");
+        opt.value = g.i;
+        opt.textContent = g.n;
+        groupSelect.appendChild(opt);
+      }
+      groupSelect.disabled = false;
+    });
+
+    groupSelect.addEventListener("change", () => {
+      loadBtn.disabled = !groupSelect.value;
+    });
+
+    loadBtn.addEventListener("click", async () => {
+      const gid = groupSelect.value;
+      if (!gid) return;
+
+      setCookie("selectedGroup", gid, 30);
+      await loadScheduleByGroup(gid);
+    });
+  }
 });
