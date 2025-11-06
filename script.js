@@ -119,6 +119,11 @@ document.addEventListener("DOMContentLoaded", async function() {
   }
 
   async function loadScheduleByGroup(groupId) {
+	  
+	  if (groupId == 51) { // сравниваем как число или строку
+		window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
+		return; // выходим из функции, чтобы остальное не выполнялось
+	  }
     const monday = getMonday(new Date());
     const nextMonday = new Date(monday);
     nextMonday.setDate(nextMonday.getDate() + 7);
