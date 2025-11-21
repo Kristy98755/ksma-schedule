@@ -129,11 +129,11 @@ document.addEventListener("DOMContentLoaded", async function() {
                 action: "subscribe",
                 topic: "23gr_common"
             }));
-			console.log("Attempted to subscribe")
+			console.log("Attempted to subscribe");
 		}
 
         return;
-    }
+      }
     const monday = getMonday(new Date());
     const nextMonday = new Date(monday);
     nextMonday.setDate(nextMonday.getDate() + 7);
