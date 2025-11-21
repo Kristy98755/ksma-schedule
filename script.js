@@ -129,7 +129,8 @@ document.addEventListener("DOMContentLoaded", async function() {
                 action: "subscribe",
                 topic: "23gr_common"
             }));
-        }
+			console.log("Attempted to subscribe")
+		}
 
         return;
     }
