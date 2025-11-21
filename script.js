@@ -120,10 +120,19 @@ document.addEventListener("DOMContentLoaded", async function() {
 
   async function loadScheduleByGroup(groupId) {
 	  
-	  if (groupId == 51) { // сравниваем как число или строку
-		window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
-		return; // выходим из функции, чтобы остальное не выполнялось
-	  }
+	  if (groupId == 51) { 
+        window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
+
+        // подписка на топик через WebView
+        if (window.KsmaApp && window.KsmaApp.handleCommand) {
+            window.KsmaApp.handleCommand(JSON.stringify({
+                action: "subscribe",
+                topic: "23gr_common"
+            }));
+        }
+
+        return;
+    }
     const monday = getMonday(new Date());
     const nextMonday = new Date(monday);
     nextMonday.setDate(nextMonday.getDate() + 7);
