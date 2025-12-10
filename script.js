@@ -1,4 +1,24 @@
 document.addEventListener("DOMContentLoaded", async function() {
+    async function getLatestVersion() {
+        const res = await fetch("https://api.github.com/repos/kristy98755/ksma-schedule/releases/latest");
+        const json = await res.json();
+        return json.tag_name.replace(/[^\d]/g, ''); 
+    }
+
+    async function checkUpdate() {
+        const build = window.KsmaApp.getBuildNumber();
+        const latest = await getLatestVersion();
+
+        console.log("App build:", build, "Latest GitHub:", latest);
+
+        if (Number(build) < Number(latest)) {
+            window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
+			window.KsmaApp.startUpdate();
+        }
+    }
+
+    checkUpdate();	
+	
   const proxy = "https://ksma-schedule.itismynickname9.workers.dev";
   const currWeekEl = document.getElementById("CurrWeek");
   const nextWeekEl = document.getElementById("NextWeek");
