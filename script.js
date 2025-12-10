@@ -1,23 +1,31 @@
 document.addEventListener("DOMContentLoaded", async function() {
-    async function getLatestVersion() {
-        const res = await fetch("https://api.github.com/repos/kristy98755/ksma-schedule/releases/latest");
-        const json = await res.json();
-        return json.tag_name.replace(/[^\d]/g, ''); 
-    }
+	async function getLatestVersion() {
+		const res = await fetch("https://api.github.com/repos/kristy98755/ksma-schedule/releases/latest");
+		const json = await res.json();
+		console.log("Fetched latest release:", json.tag_name); // логируем прямо здесь
+		return json.tag_name.replace(/[^\d]/g, ''); 
+	}
 
-    async function checkUpdate() {
-        const build = window.KsmaApp.getBuildNumber();
-        const latest = await getLatestVersion();
+	async function checkUpdate() {
+		const build = window.KsmaApp.getBuildNumber();
+		const latest = await getLatestVersion();
 
-        console.log("App build:", build, "Latest GitHub:", latest);
+		console.log("App build:", build, "Latest GitHub:", latest); // логируем сравнение
 
-        if (Number(build) < Number(latest)) {
-            window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
-			window.KsmaApp.startUpdate();
-        }
-    }
+		if (Number(build) < Number(latest)) {
+			console.log("App outdated, triggering update"); // лог перед действием
+			window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
+			if (window.KsmaApp.startUpdate) {
+				window.KsmaApp.startUpdate();
+				console.log("startUpdate() called on KsmaApp"); // лог вызова функции Android
+			}
+		} else {
+			console.log("App is up-to-date"); // лог, если обновление не требуется
+		}
+	}
 
-    checkUpdate();	
+	checkUpdate();
+
 	
   const proxy = "https://ksma-schedule.itismynickname9.workers.dev";
   const currWeekEl = document.getElementById("CurrWeek");
