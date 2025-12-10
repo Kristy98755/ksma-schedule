@@ -7,22 +7,38 @@ document.addEventListener("DOMContentLoaded", async function() {
 	}
 
 	async function checkUpdate() {
-		const build = window.KsmaApp.getBuildNumber();
-		const latest = await getLatestVersion();
+    let build = "0"; // по умолчанию старое приложение
+    try {
+        if (window.KsmaApp && window.KsmaApp.getBuildNumber) {
+            build = window.KsmaApp.getBuildNumber();
+            // отправляем в adb logcat через Kotlin
+            if (window.KsmaApp.reportBuild) window.KsmaApp.reportBuild(build);
+        } else {
+            console.warn("KsmaApp interface not found, assuming outdated app");
+        }
+    } catch (e) {
+        console.error("Error reading build number:", e);
+    }
 
-		console.log("App build:", build, "Latest GitHub:", latest); // логируем сравнение
+    const latest = await getLatestVersion();
+    console.log("App build:", build, "Latest GitHub:", latest);
 
-		if (Number(build) < Number(latest)) {
-			console.log("App outdated, triggering update"); // лог перед действием
-			window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
-			if (window.KsmaApp.startUpdate) {
-				window.KsmaApp.startUpdate();
-				console.log("startUpdate() called on KsmaApp"); // лог вызова функции Android
-			}
-		} else {
-			console.log("App is up-to-date"); // лог, если обновление не требуется
-		}
-	}
+    if (Number(build) < Number(latest)) {
+        console.log("App outdated, triggering update");
+        window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
+
+        try {
+            if (window.KsmaApp && window.KsmaApp.startUpdate) {
+                window.KsmaApp.startUpdate();
+                console.log("startUpdate() called on KsmaApp");
+            }
+        } catch (e) {
+            console.error("Failed to call startUpdate:", e);
+        }
+    } else {
+        console.log("App is up-to-date");
+    }
+}
 
 	checkUpdate();
 
