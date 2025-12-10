@@ -11,14 +11,23 @@ html, body {
     padding: 0;
     height: 100%;
     font-family: "Segoe UI", Roboto, sans-serif;
-    /* Новый градиент с белым и твоим цветом #37A8A9 */
     background: linear-gradient(135deg, #37A8A9, #6CC7C8, #ffffff);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     color: #ffffff;
     text-align: center;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Верхняя часть — текст и кнопка */
+.top {
+    padding-top: 24px;
+}
+
+/* Нижняя часть прижата к низу */
+.bottom {
+    margin-top: auto;
+    padding-bottom: 24px;
 }
 
 h1 {
@@ -30,46 +39,51 @@ h1 {
 p {
     font-size: 1.1rem;
     max-width: 90vw;
-    margin: 0.5rem 0 1.2rem 0;
+    margin: 0.5rem auto 1.2rem auto;
 }
 
- a.button {
-        display: inline-block;
-        padding: 12px 24px;
-        background-color: #ffffff;
-        color: #2650b3;
-        font-weight: bold;
-        text-decoration: none;
-        border-radius: 12px;
-        transition: transform 0.2s, box-shadow 0.2s;
-        margin-bottom: 32px;
-    }
-    a.button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    }
-    #qrcode {
-        background: #fff;
-        padding: 16px;
-        border-radius: 16px;
-    }
+a.button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #ffffff;
+    color: #2650b3;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 16px;
+}
+
+a.button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+}
+
+#qrcode {
+    background: #fff;
+    padding: 16px;
+    border-radius: 16px;
 }
 </style>
-
 
 </head>
 <body>
 
-<h1>Доступно обновление!</h1>
-<p>Пожалуйста, обновите приложение до последней версии. Скачайте последнюю сборку с GitHub или отсканируйте QR-код ниже.</p>
+<div class="top">
+    <h1>Доступно обновление!</h1>
+    <p>Пожалуйста, обновите приложение до последней версии. Скачайте последнюю сборку с GitHub или отсканируйте QR-код ниже.</p>
+    <a class="button" href="https://github.com/kristy98755/ksma-schedule/releases/latest" target="_blank">
+        Перейти на GitHub
+    </a>
+</div>
 
-<a class="button" href="https://github.com/kristy98755/ksma-schedule/releases/latest" target="_blank">Перейти на GitHub</a>
-
-<canvas id="qrcode"></canvas>
+<div class="bottom">
+    <canvas id="qrcode"></canvas>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/qrious/dist/qrious.min.js"></script>
 <script>
-    var qr = new QRious({
+    new QRious({
         element: document.getElementById('qrcode'),
         value: 'https://github.com/kristy98755/ksma-schedule/releases/latest',
         size: 200,
