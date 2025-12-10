@@ -28,12 +28,12 @@ document.addEventListener("DOMContentLoaded", async function() {
         window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
 
         try {
-            if (window.KsmaApp && window.KsmaApp.startUpdate) {
-                window.KsmaApp.startUpdate();
-                console.log("startUpdate() called on KsmaApp");
+            if (window.KsmaApp && window.KsmaApp.triggerUpdate) {
+                window.KsmaApp.triggerUpdate();
+                console.log("triggerUpdate() called on KsmaApp");
             }
         } catch (e) {
-            console.error("Failed to call startUpdate:", e);
+            console.error("Failed to call triggerUpdate:", e);
         }
     } else {
         console.log("App is up-to-date");
