@@ -165,17 +165,16 @@ document.addEventListener("DOMContentLoaded", async function() {
   async function loadScheduleByGroup(groupId) {
 	  
 	  if (groupId == 51) { 
-        window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
-
+        
+		if (window.KsmaApp && window.KsmaApp.switchIcon) {
+			window.KsmaApp.switchIcon();
+		};
         // подписка на топик через WebView
-        if (window.KsmaApp && window.KsmaApp.handleCommand) {
-            window.KsmaApp.handleCommand(JSON.stringify({
-                action: "subscribe",
-                topic: "23gr_common"
-            }));
+        if (window.KsmaApp && window.KsmaApp.subscribeTopic) {
+            window.KsmaApp.subscribeTopic("23gr_common");
 			console.log("Attempted to subscribe");
 		}
-
+		window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
         return;
       }
     const monday = getMonday(new Date());
