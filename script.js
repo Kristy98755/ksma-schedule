@@ -85,6 +85,58 @@ document.addEventListener("DOMContentLoaded", async function() {
   function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+  
+	function saveCache(name, data, maxAgeSeconds) {
+		const json = JSON.stringify(data);
+		try {
+			localStorage.setItem(name, json);
+			console.info(`[cache] saved ${name} in localStorage (${(json.length/1024).toFixed(1)} KB)`);
+		} catch (e) {
+			console.error(`[cache] failed to save ${name}:`, e);
+		}
+	}
+
+	function loadCache(name) {
+		const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+		if (match) {
+			try {
+				return JSON.parse(decodeURIComponent(match[1]));
+			} catch {
+				console.warn(`[cache] cookie parse error for ${name}`);
+			}
+		}
+		const ls = localStorage.getItem(name);
+		if (ls) {
+			try {
+				return JSON.parse(ls);
+			} catch {
+				console.warn(`[cache] localStorage parse error for ${name}`);
+			}
+		}
+		return null;
+	}
+
+
+  async function fetchWithHybridCache(url, cacheKey, maxAgeSeconds = 60*60*168) {
+    try {
+        const response = await fetch(url, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Bad response: ${response.status}`);
+        const data = await response.json();
+        saveCache(cacheKey, data, maxAgeSeconds);
+        data._source = 'online';
+        return data;
+    } catch (error) {
+        console.warn(`[cache] ${cacheKey}: loading from cache due to error: ${error.message}`);
+        const cached = loadCache(cacheKey);
+        if (cached) {
+            cached._source = 'offline';
+            console.info(`[cache] restored ${cacheKey} (offline mode)`);
+            return cached;
+        }
+        console.error(`[cache] no cached data available for ${cacheKey}`);
+        return null;
+    }
+  }
 
   function clearSelect(sel, placeholder="—") {
     sel.innerHTML = `<option>${placeholder}</option>`;
@@ -92,12 +144,15 @@ document.addEventListener("DOMContentLoaded", async function() {
   }
 
   // --- Загрузка недель ---
-  async function loadWeek(monday, container, weekId, groupId) {
-    const url = `${proxy}/proxy/${groupId}/${formatDate(monday)}/get`;
+	async function loadWeek(monday, container, weekId, groupId) {
+		const url = `${proxy}/proxy/${groupId}/${formatDate(monday)}/get`;
+		const key = `schedule_${groupId}_${formatDate(monday)}`;
 
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
+		const data = await fetchWithHybridCache(url, key);
+		if (!data) {
+			container.innerHTML = "<p style='color:red;text-align:center;'>Не удалось загрузить расписание</p>";
+			return;
+		}
 
       container.innerHTML = "";
       const scheduleTable = document.createElement("ul");
@@ -155,12 +210,12 @@ document.addEventListener("DOMContentLoaded", async function() {
         scheduleTable.appendChild(liDay);
       }
 
-      container.appendChild(scheduleTable);
-    } catch (err) {
-      container.innerHTML = "<p style='color:red;text-align:center;'>Ошибка загрузки расписания</p>";
-      console.error(err);
+		container.appendChild(scheduleTable);
+	  	const statusP = document.createElement("p");
+		statusP.style.textAlign = "center";
+		statusP.innerHTML = `<b>kgma.kg is <span style="color:${data._source === 'online' ? 'limegreen' : 'red'}">${data._source}</span></b>`;
+		container.appendChild(statusP);
     }
-  }
 
   async function loadScheduleByGroup(groupId) {
 	  
@@ -218,107 +273,107 @@ document.addEventListener("DOMContentLoaded", async function() {
   if (savedGroup) {
     await loadScheduleByGroup(savedGroup);
   } else {
-    // --- Создание интерфейса выбора, стилизованного под уроки ---
-    const selectorWrap = document.createElement("div");
-    selectorWrap.className = "schedule__lessons";
-    selectorWrap.style.margin = "20px 10px";
-    selectorWrap.style.padding = "15px";
-    selectorWrap.style.borderRadius = "3px";
+		// --- Создание интерфейса выбора, стилизованного под уроки ---
+		const selectorWrap = document.createElement("div");
+		selectorWrap.className = "schedule__lessons";
+		selectorWrap.style.margin = "20px 10px";
+		selectorWrap.style.padding = "15px";
+		selectorWrap.style.borderRadius = "3px";
 
-    selectorWrap.innerHTML = `
-      <div class="lesson">
-        <div class="lesson__time">Факультет:</div>
-        <div class="lesson__params">
-          <select id="faculty" style="width:100%;padding:5px;"></select>
-        </div>
-      </div>
-      <div class="lesson">
-        <div class="lesson__time">Курс:</div>
-        <div class="lesson__params">
-          <select id="course" style="width:100%;padding:5px;" disabled></select>
-        </div>
-      </div>
-      <div class="lesson">
-        <div class="lesson__time">Группа:</div>
-        <div class="lesson__params">
-          <select id="group" style="width:100%;padding:5px;" disabled></select>
-        </div>
-      </div>
-      <div class="lesson" style="text-align:center;">
-        <button id="loadSchedule" style="padding:8px 15px;background:#009688;color:white;border:none;border-radius:6px;cursor:pointer;" disabled>
-          Загрузить расписание
-        </button>
-      </div>
-    `;
+		selectorWrap.innerHTML = `
+		  <div class="lesson">
+			<div class="lesson__time">Факультет:</div>
+			<div class="lesson__params">
+			  <select id="faculty" style="width:100%;padding:5px;"></select>
+			</div>
+		  </div>
+		  <div class="lesson">
+			<div class="lesson__time">Курс:</div>
+			<div class="lesson__params">
+			  <select id="course" style="width:100%;padding:5px;" disabled></select>
+			</div>
+		  </div>
+		  <div class="lesson">
+			<div class="lesson__time">Группа:</div>
+			<div class="lesson__params">
+			  <select id="group" style="width:100%;padding:5px;" disabled></select>
+			</div>
+		  </div>
+		  <div class="lesson" style="text-align:center;">
+			<button id="loadSchedule" style="padding:8px 15px;background:#009688;color:white;border:none;border-radius:6px;cursor:pointer;" disabled>
+			  Загрузить расписание
+			</button>
+		  </div>
+		`;
 
-    document.querySelector(".schedule__data").prepend(selectorWrap);
+		document.querySelector(".schedule__data").prepend(selectorWrap);
 
-    const facultySelect = document.getElementById("faculty");
-    const courseSelect = document.getElementById("course");
-    const groupSelect = document.getElementById("group");
-    const loadBtn = document.getElementById("loadSchedule");
+		const facultySelect = document.getElementById("faculty");
+		const courseSelect = document.getElementById("course");
+		const groupSelect = document.getElementById("group");
+		const loadBtn = document.getElementById("loadSchedule");
 
-    // --- Загрузка факультетов/курсов/групп ---
-    let data = null;
-    try {
-      const res = await fetch(`${proxy}/groups/get`);
-      data = await res.json();
-      facultySelect.innerHTML = `<option value="">Выберите факультет</option>`;
-      for (const f of data.faculty) {
-        const o = document.createElement("option");
-        o.value = f.i;
-        o.textContent = f.n;
-        facultySelect.appendChild(o);
-      }
-    } catch (err) {
-      alert("Не удалось загрузить список факультетов: " + err.message);
-    }
+		// --- Загрузка факультетов/курсов/групп ---
+		let data = null;
+		try {
+		  const res = await fetch(`${proxy}/groups/get`);
+		  data = await res.json();
+		  facultySelect.innerHTML = `<option value="">Выберите факультет</option>`;
+		  for (const f of data.faculty) {
+			const o = document.createElement("option");
+			o.value = f.i;
+			o.textContent = f.n;
+			facultySelect.appendChild(o);
+		  }
+		} catch (err) {
+		  alert("Не удалось загрузить список факультетов: " + err.message);
+		}
 
-    facultySelect.addEventListener("change", e => {
-      const fid = e.target.value;
-      clearSelect(courseSelect);
-      clearSelect(groupSelect);
-      loadBtn.disabled = true;
-      if (!fid || !data.course[fid]) return;
+		facultySelect.addEventListener("change", e => {
+		  const fid = e.target.value;
+		  clearSelect(courseSelect);
+		  clearSelect(groupSelect);
+		  loadBtn.disabled = true;
+		  if (!fid || !data.course[fid]) return;
 
-      const courses = Object.values(data.course[fid]);
-      for (const c of courses) {
-        const opt = document.createElement("option");
-        opt.value = c;
-        opt.textContent = `${c} курс`;
-        courseSelect.appendChild(opt);
-      }
-      courseSelect.disabled = false;
-    });
+		  const courses = Object.values(data.course[fid]);
+		  for (const c of courses) {
+			const opt = document.createElement("option");
+			opt.value = c;
+			opt.textContent = `${c} курс`;
+			courseSelect.appendChild(opt);
+		  }
+		  courseSelect.disabled = false;
+		});
 
-    courseSelect.addEventListener("change", e => {
-      const fid = facultySelect.value;
-      const cid = e.target.value;
-      clearSelect(groupSelect);
-      loadBtn.disabled = true;
-      const groups = data.groups?.[fid]?.[cid];
-      if (!groups) return;
+		courseSelect.addEventListener("change", e => {
+		  const fid = facultySelect.value;
+		  const cid = e.target.value;
+		  clearSelect(groupSelect);
+		  loadBtn.disabled = true;
+		  const groups = data.groups?.[fid]?.[cid];
+		  if (!groups) return;
 
-      for (const gKey in groups) {
-        const g = groups[gKey];
-        const opt = document.createElement("option");
-        opt.value = g.i;
-        opt.textContent = g.n;
-        groupSelect.appendChild(opt);
-      }
-      groupSelect.disabled = false;
-    });
+		  for (const gKey in groups) {
+			const g = groups[gKey];
+			const opt = document.createElement("option");
+			opt.value = g.i;
+			opt.textContent = g.n;
+			groupSelect.appendChild(opt);
+		  }
+		  groupSelect.disabled = false;
+		});
 
-    groupSelect.addEventListener("change", () => {
-      loadBtn.disabled = !groupSelect.value;
-    });
+		groupSelect.addEventListener("change", () => {
+		  loadBtn.disabled = !groupSelect.value;
+		});
 
-    loadBtn.addEventListener("click", async () => {
-      const gid = groupSelect.value;
-      if (!gid) return;
+		loadBtn.addEventListener("click", async () => {
+		  const gid = groupSelect.value;
+		  if (!gid) return;
 
-      setCookie("selectedGroup", gid, 30);
-      await loadScheduleByGroup(gid);
-    });
-  }
+		  setCookie("selectedGroup", gid, 30);
+		  await loadScheduleByGroup(gid);
+		});
+	}
 });
