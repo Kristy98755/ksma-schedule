@@ -148,7 +148,32 @@ document.addEventListener("DOMContentLoaded", async function() {
 		const url = `${proxy}/proxy/${groupId}/${formatDate(monday)}/get`;
 		const key = `schedule_${groupId}_${formatDate(monday)}`;
 
-		const data = await fetchWithHybridCache(url, key);
+		let data = null;
+		try {
+			data = await fetchWithHybridCache(url, key);
+			if (!data) throw new Error("Пустой ответ");
+			saveCache(key, data, 60*60*24*7); // сохраняем на неделю
+		} catch (err) {
+			console.warn("Не удалось получить расписание с Cloudflare:", err.message);
+
+			// fallback на Vercel
+			try {
+				const vercelUrl = url.replace(proxy + "/proxy", "https://ksma-schedule.vercel.app/api/proxy");
+				const res = await fetch(vercelUrl);
+				if (!res.ok) throw new Error(`Vercel response: ${res.status}`);
+				data = await res.json();
+				console.log("Расписание загружено с Vercel");
+				data._source = 'online';
+				saveCache(key, data, 60*60*24*7); // сохраняем на неделю
+
+			} catch (vErr) {
+				console.warn("Не удалось получить расписание с Vercel:", vErr.message);
+				data = loadCache(key);
+				if (data) console.log("Расписание восстановлено из кэша");
+				data._source = 'offline';
+			}
+		}
+
 		if (!data) {
 			container.innerHTML = "<p style='color:red;text-align:center;'>Не удалось загрузить расписание</p>";
 			return;
@@ -166,6 +191,10 @@ document.addEventListener("DOMContentLoaded", async function() {
         const dateSpan = document.createElement("span");
         dateSpan.className = "schedule__date";
         const dateObj = new Date(day.d);
+		if (isNaN(dateObj)) {
+			console.warn("[loadWeek] пропущен битый день:", day.d);
+			continue; // пропускаем этот день
+		}
         const opts = { weekday: "long", day: "numeric", month: "long" };
         dateSpan.textContent = capitalizeFirst(dateObj.toLocaleDateString("ru-RU", opts));
         liDay.appendChild(dateSpan);
@@ -316,18 +345,45 @@ document.addEventListener("DOMContentLoaded", async function() {
 		// --- Загрузка факультетов/курсов/групп ---
 		let data = null;
 		try {
-		  const res = await fetch(`${proxy}/groups/get`);
-		  data = await res.json();
-		  facultySelect.innerHTML = `<option value="">Выберите факультет</option>`;
-		  for (const f of data.faculty) {
-			const o = document.createElement("option");
-			o.value = f.i;
-			o.textContent = f.n;
-			facultySelect.appendChild(o);
-		  }
+			const res = await fetch(`${proxy}/groups/get`);
+			if (!res.ok) throw new Error(`Bad response: ${res.status}`);
+			data = await res.json();
 		} catch (err) {
-		  alert("Не удалось загрузить список факультетов: " + err.message);
+			console.warn("Не удалось загрузить список факультетов с Cloudflare:", err.message);
+
+			// fallback на Vercel
+			try {
+				const vercelRes = await fetch("https://ksma-schedule.vercel.app/api/proxy/groups/get");
+				if (!vercelRes.ok) throw new Error(`Vercel response: ${vercelRes.status}`);
+				data = await vercelRes.json();
+				console.log("Факультеты загружены с Vercel");
+			} catch (vErr) {
+				console.warn("Не удалось загрузить список факультетов с Vercel:", vErr.message);
+
+				// пробуем взять из кэша
+				const cached = loadCache("groups_cache");
+				if (cached) {
+					data = cached;
+					console.log("Факультеты восстановлены из кэша");
+				} else {
+					console.error("Факультеты недоступны ни на Cloudflare, ни на Vercel, ни в кэше");
+				}
+			}
 		}
+
+		if (data) {
+			saveCache("groups_cache", data, 60*60*24*7); // сохраняем в кэш на неделю
+			facultySelect.innerHTML = `<option value="">Выберите факультет</option>`;
+			for (const f of data.faculty) {
+				const o = document.createElement("option");
+				o.value = f.i;
+				o.textContent = f.n;
+				facultySelect.appendChild(o);
+			}
+		} else {
+			facultySelect.innerHTML = `<option value="">Факультеты недоступны</option>`;
+		}
+
 
 		facultySelect.addEventListener("change", e => {
 		  const fid = e.target.value;
