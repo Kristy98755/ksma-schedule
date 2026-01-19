@@ -10,11 +10,13 @@ export default async function handler(req, res) {
     const path = req.query.path ? req.query.path.join("/") : "";
     console.log("Computed path:", path);
 
-    // Формируем полный URL
-    const targetUrl = `https://www.kgma.kg/ru/json/schedule/${path}`;
+    // Формируем корректный URL через WHATWG URL
+    // Добавляем слэш в base, чтобы path добавился корректно
+    const baseUrl = new URL("https://www.kgma.kg/ru/json/schedule/");
+    const targetUrl = new URL(path, baseUrl).toString();
     console.log("Target URL:", targetUrl);
 
-    // Игнорируем SSL ошибки
+    // Игнорируем ошибки SSL
     const agent = new https.Agent({ rejectUnauthorized: false });
 
     // Делаем fetch
