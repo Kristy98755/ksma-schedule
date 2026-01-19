@@ -1,24 +1,28 @@
-import https from 'https'
+// api/proxy/[...path].js
+import fetch from 'node-fetch';
+import https from 'https';
 
 export default async function handler(req, res) {
   try {
-    const path = req.query.path ? "/" + req.query.path.join("/") : ""
+    // Путь после /api/proxy/
+    const path = req.query.path ? "/" + req.query.path.join("/") : "";
 
-    const targetUrl = new URL(path, "https://www.kgma.kg/ru/json/schedule").toString()
+    // Формируем URL через WHATWG URL
+    const targetUrl = new URL(path, "https://www.kgma.kg/ru/json/schedule").toString();
 
-    // Игнорируем ошибки SSL
-    const agent = new https.Agent({
-      rejectUnauthorized: false
-    })
+    // https.Agent с игнорированием ошибок SSL
+    const agent = new https.Agent({ rejectUnauthorized: false });
 
-    const resp = await fetch(targetUrl, { agent })
-    const data = await resp.text()
+    // Делаем fetch через node-fetch
+    const resp = await fetch(targetUrl, { agent });
+    const data = await resp.text();
 
-    res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Content-Type", "application/json; charset=utf-8")
-    res.status(resp.status).send(data)
+    // Отправляем с CORS
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.status(resp.status).send(data);
   } catch (e) {
-    console.error("Fetch failed:", e)
-    res.status(500).json({ error: String(e) })
+    console.error("Fetch failed:", e);
+    res.status(500).json({ error: String(e) });
   }
 }
