@@ -4,16 +4,16 @@ import https from 'https';
 
 export default async function handler(req, res) {
   try {
-    // Путь после /api/proxy/
-    const path = req.query.path ? "/" + req.query.path.join("/") : "";
+    // Путь после /api/proxy/ без ведущего слэша
+    const path = req.query.path ? req.query.path.join("/") : "";
 
-    // Формируем URL через WHATWG URL
-    const targetUrl = new URL(path, "https://www.kgma.kg/ru/json/schedule").toString();
+    // Формируем полный URL корректно
+    const targetUrl = `https://www.kgma.kg/ru/json/schedule/${path}`;
 
-    // https.Agent с игнорированием ошибок SSL
+    // Игнорируем ошибки SSL (сертификат KGMA кривой)
     const agent = new https.Agent({ rejectUnauthorized: false });
 
-    // Делаем fetch через node-fetch
+    // Делаем fetch
     const resp = await fetch(targetUrl, { agent });
     const data = await resp.text();
 
