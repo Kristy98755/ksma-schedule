@@ -1,17 +1,19 @@
-// api/proxy/[...path].js
+import https from 'https'
+
 export default async function handler(req, res) {
   try {
-    // Получаем путь после /api/proxy/
     const path = req.query.path ? "/" + req.query.path.join("/") : ""
 
-    // Формируем полный URL через WHATWG URL
     const targetUrl = new URL(path, "https://www.kgma.kg/ru/json/schedule").toString()
 
-    // Делаем fetch
-    const resp = await fetch(targetUrl)
+    // Игнорируем ошибки SSL
+    const agent = new https.Agent({
+      rejectUnauthorized: false
+    })
+
+    const resp = await fetch(targetUrl, { agent })
     const data = await resp.text()
 
-    // Отправляем с CORS
     res.setHeader("Access-Control-Allow-Origin", "*")
     res.setHeader("Content-Type", "application/json; charset=utf-8")
     res.status(resp.status).send(data)
