@@ -7,40 +7,63 @@ document.addEventListener("DOMContentLoaded", async function() {
 	}
 
 	async function checkUpdate() {
-    let build = "0"; // по умолчанию старое приложение
-    try {
-        if (window.KsmaApp && window.KsmaApp.getBuildNumber) {
-            build = window.KsmaApp.getBuildNumber();
-            // отправляем в adb logcat через Kotlin
-            if (window.KsmaApp.reportBuild) window.KsmaApp.reportBuild(build);
-        } else {
-            console.warn("KsmaApp interface not found, assuming outdated app");
-        }
-    } catch (e) {
-        console.error("Error reading build number:", e);
-    }
+			const isAndroid = /Android/i.test(navigator.userAgent);
 
-    const latest = await getLatestVersion();
-    console.log("App build:", build, "Latest GitHub:", latest);
+			let build = null;
+			let hasInterface = false;
 
-    if (Number(build) < Number(latest)) {
-        console.log("App outdated, triggering update");
-        window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
+			try {
+				if (window.KsmaApp && typeof window.KsmaApp.getBuildNumber === "function") {
+					hasInterface = true;
+					build = window.KsmaApp.getBuildNumber();
+					if (window.KsmaApp.reportBuild) {
+						window.KsmaApp.reportBuild(build);
+					}
+				}
+			} catch (e) {
+				console.error("Error reading build number:", e);
+			}
 
-        try {
-            if (window.KsmaApp && window.KsmaApp.triggerUpdate) {
-                window.KsmaApp.triggerUpdate();
-                console.log("triggerUpdate() called on KsmaApp");
-            }
-        } catch (e) {
-            console.error("Failed to call triggerUpdate:", e);
-        }
-    } else {
-        console.log("App is up-to-date");
-    }
-}
+			// 4️⃣ Интерфейс не найден и это не Android → просто ОК
+			if (!isAndroid && !hasInterface) {
+				console.log("Non-Android browser, skipping update logic");
+				return;
+			}
 
-	checkUpdate();
+			// 1️⃣ Интерфейс не найден, но Android → редирект на APK
+			if (isAndroid && !hasInterface) {
+				console.log("Android detected, but no KsmaApp interface → redirect to APK");
+				window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
+				return;
+			}
+
+			// Ниже — только если интерфейс найден
+			const latest = await getLatestVersion();
+			console.log("App build:", build, "Latest GitHub:", latest);
+
+			// 2️⃣ Интерфейс найден, версия устарела → редирект + intent
+			if (Number(build) < Number(latest)) {
+				console.log("App outdated → redirect and trigger update");
+
+				window.location.href = "https://kristy98755.github.io/ksma-schedule/update.html";
+
+				try {
+					if (window.KsmaApp && typeof window.KsmaApp.triggerUpdate === "function") {
+						window.KsmaApp.triggerUpdate();
+					}
+				} catch (e) {
+					console.error("Failed to call triggerUpdate:", e);
+				}
+
+				return;
+			}
+
+			// 3️⃣ Интерфейс найден и версия актуальна → ОК
+			console.log("App is up-to-date");
+		}
+
+
+checkUpdate();
 
 	
   const proxy = "https://ksma-schedule.itismynickname9.workers.dev";
