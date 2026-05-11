@@ -276,16 +276,19 @@ checkUpdate();
 		  38, 39, 40, 41, 42, 43, 44, 45, 46,
 		  47, 48, 49, 50, 51, 52,
 		  4505, 4506, 4507, 4508, 4559
-		].includes(groupId)) { 
+		].includes(Number(groupId))) { 
         
-		if (window.KsmaApp && window.KsmaApp.switchIcon) {
-			window.KsmaApp.switchIcon();
+		if ((groupId) == 51) {
+			if (window.KsmaApp && window.KsmaApp.switchIcon) {
+				window.KsmaApp.switchIcon();
+			};
+			// подписка на топик через WebView
+			console.log("Detected groupid=51!");
+			if (window.KsmaApp && window.KsmaApp.subscribeTopic) {
+				window.KsmaApp.subscribeTopic("23gr_common");
+				console.log("Attempted to subscribe");
+			}
 		};
-        // подписка на топик через WebView
-        if (window.KsmaApp && window.KsmaApp.subscribeTopic) {
-            window.KsmaApp.subscribeTopic("23gr_common");
-			console.log("Attempted to subscribe");
-		}
 		window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
         return;
       }
