@@ -271,7 +271,12 @@ checkUpdate();
 
   async function loadScheduleByGroup(groupId) {
 	  
-	  if (groupId == 51) { 
+	  if ([
+		  29, 30, 31, 32, 33, 34, 35, 36, 37,
+		  38, 39, 40, 41, 42, 43, 44, 45, 46,
+		  47, 48, 49, 50, 51, 52,
+		  4505, 4506, 4507, 4508, 4559
+		].includes(groupId)) { 
         
 		if (window.KsmaApp && window.KsmaApp.switchIcon) {
 			window.KsmaApp.switchIcon();
