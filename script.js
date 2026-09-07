@@ -271,8 +271,8 @@ checkUpdate();
 
   async function loadScheduleByGroup(groupId) {
 	  
-	  // Только 23 группа (леч. дело) — 4 курс: ID 75; 3 курс: ID 51
-	  if (Number(groupId) === 75 || Number(groupId) === 51) {
+	  // Только 23 группа (леч. дело) — 4 курс: ID 75
+	  if (Number(groupId) === 75) {
 			if (window.KsmaApp && window.KsmaApp.switchIcon) {
 				window.KsmaApp.switchIcon();
 			};
