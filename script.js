@@ -271,30 +271,18 @@ checkUpdate();
 
   async function loadScheduleByGroup(groupId) {
 	  
-	  if ([
-		  29, 30, 31, 32, 33, 34, 35, 36, 37,
-		  38, 39, 40, 41, 42, 43, 44, 45, 46,
-		  47, 48, 49, 50, 51, 52,
-		  4505, 4506, 4507, 4508, 4559, 4615, 4925, 4926, 4927, 4928,
-		  // 4 курс (леч. дело, фак. 0) — те же номера групп, новые ID
-		  53, 54, 55, 56, 57, 58, 59, 60, 61, 62,
-		  63, 64, 65, 66, 67, 68, 69, 70, 71, 72,
-		  73, 74, 75, 76, 77, 78, 79, 80, 81, 82
-		].includes(Number(groupId))) { 
-        
-		if (Number(groupId) === 51 || Number(groupId) === 75) {
+	  // Только 23 группа (леч. дело) — 4 курс: ID 75; 3 курс: ID 51
+	  if (Number(groupId) === 75 || Number(groupId) === 51) {
 			if (window.KsmaApp && window.KsmaApp.switchIcon) {
 				window.KsmaApp.switchIcon();
 			};
-			// подписка на топик через WebView
 			console.log(`Detected groupid=${groupId}!`);
 			if (window.KsmaApp && window.KsmaApp.subscribeTopic) {
 				window.KsmaApp.subscribeTopic("23gr_common");
 				console.log("Attempted to subscribe");
 			}
-		};
-		window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
-        return;
+			window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
+			return;
       }
     const monday = getMonday(new Date());
     const nextMonday = new Date(monday);
