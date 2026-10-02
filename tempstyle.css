@@ -130,6 +130,16 @@ body {
     color: #32465a;
 }
 
+/* Погода под временем пары */
+.lesson__weather {
+    display: block;
+    margin-top: 3px;
+    font-size: 13px;
+    font-style: normal;
+    color: #1b6b8a;
+    white-space: nowrap;
+}
+
 .lesson__params {
     display: table-cell;
     padding-left: 10px;

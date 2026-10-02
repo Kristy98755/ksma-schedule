@@ -166,6 +166,55 @@ checkUpdate();
     sel.disabled = true;
   }
 
+  // ---------- Погода под каждой парой ----------
+  const WEATHER_URL = "https://api.open-meteo.com/v1/forecast"
+    + "?latitude=42.875&longitude=74.5"
+    + "&hourly=temperature_2m,precipitation,snowfall,cloudcover"
+    + "&past_days=7&forecast_days=14"
+    + "&timezone=Asia/Bishkek";
+
+  async function attachWeather(container) {
+    const slots = container.querySelectorAll(".lesson__weather");
+    if (!slots.length) return;
+    try {
+      const res = await fetch(WEATHER_URL);
+      const w = await res.json();
+      const hours = w.hourly && w.hourly.time;
+      if (!hours) return;
+
+      slots.forEach(slot => {
+        const lessonEl = slot.closest(".lesson");
+        const dayLi = slot.closest(".schedule__day");
+        const timeEl = lessonEl ? lessonEl.querySelector(".lesson__time") : null;
+        if (!dayLi || !timeEl) return;
+
+        const date = dayLi.getAttribute("data-iso");
+        const hour = timeEl.getAttribute("data-hour");
+        if (!date || !hour) return;
+
+        const idx = hours.findIndex(t => t.startsWith(`${date}T${hour.padStart(2, "0")}:`));
+        if (idx === -1) return;
+
+        const temp = Math.round(w.hourly.temperature_2m[idx]);
+        const precip = w.hourly.precipitation[idx];
+        const snow = w.hourly.snowfall[idx];
+        const cloud = w.hourly.cloudcover[idx];
+
+        let icon = "☀️";
+        if (snow > 0.1) icon = "❄️";
+        else if (precip > 0.1) icon = "🌧";
+        else if (cloud >= 85) icon = "☁️";
+        else if (cloud >= 40) icon = "⛅";
+        else if (cloud >= 20) icon = "🌤";
+
+        slot.textContent = `${icon} ${temp}°`;
+        slot.title = `${temp}°C, облачность ${cloud}%, осадки ${precip} мм`;
+      });
+    } catch (e) {
+      console.warn("[weather] не удалось:", e.message);
+    }
+  }
+
   // --- Загрузка недель ---
 	async function loadWeek(monday, container, weekId, groupId) {
 		const url = `${proxy}/proxy/${groupId}/${formatDate(monday)}/get`;
@@ -218,6 +267,12 @@ checkUpdate();
 			console.warn("[loadWeek] пропущен битый день:", day.d);
 			continue; // пропускаем этот день
 		}
+        // Полная дата для погоды (YYYY-MM-DD)
+        {
+          const im = dateObj.getMonth() + 1, idd = dateObj.getDate();
+          liDay.setAttribute("data-iso",
+            `${dateObj.getFullYear()}-${im < 10 ? "0" + im : im}-${idd < 10 ? "0" + idd : idd}`);
+        }
         const opts = { weekday: "long", day: "numeric", month: "long" };
         dateSpan.textContent = capitalizeFirst(dateObj.toLocaleDateString("ru-RU", opts));
         liDay.appendChild(dateSpan);
@@ -233,6 +288,14 @@ checkUpdate();
           const time = document.createElement("div");
           time.className = "lesson__time";
           time.textContent = lesson.tm;
+          // Час начала для погоды
+          {
+            const sh = parseInt(String(lesson.tm).split("-")[0], 10);
+            if (!isNaN(sh)) time.setAttribute("data-hour", String(sh));
+          }
+          const weatherSlot = document.createElement("span");
+          weatherSlot.className = "lesson__weather";
+          time.appendChild(weatherSlot);
           li.appendChild(time);
 
           const params = document.createElement("div");
@@ -267,6 +330,8 @@ checkUpdate();
 		statusP.style.textAlign = "center";
 		statusP.innerHTML = `<b>kgma.kg is <span style="color:${data._source === 'online' ? 'limegreen' : 'red'}">${data._source}</span></b>`;
 		container.appendChild(statusP);
+
+		attachWeather(container);
     }
 
   async function loadScheduleByGroup(groupId) {
