@@ -360,7 +360,7 @@ window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
 			  window.KsmaApp.subscribeTopic("27gr_common");
 			  console.log("Attempted to subscribe");
 		  }
-		  window.location.href = "https://kristy98755.github.io/ksma-schedule-27gr";
+		  window.location.href = "https://kristy98755.github.io/ksma-schedule-28gr";
 		  return;
       }
     const monday = getMonday(new Date());
