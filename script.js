@@ -350,14 +350,14 @@ window.location.href = "https://kristy98755.github.io/ksma-schedule-23gr";
 		  return;
       }
 
-	  // Только 27 группа (леч. дело) — 4 курс: ID 79
-	  if (Number(groupId) === 79) {
+	  // Только 28 группа (леч. дело) — 4 курс: ID 80
+	  if (Number(groupId) === 80) {
 		  if (window.KsmaApp && window.KsmaApp.switchIcon) {
 			  window.KsmaApp.switchIcon();
 		  };
 		  console.log(`Detected groupid=${groupId}!`);
 		  if (window.KsmaApp && window.KsmaApp.subscribeTopic) {
-			  window.KsmaApp.subscribeTopic("27gr_common");
+			  window.KsmaApp.subscribeTopic("28gr_common");
 			  console.log("Attempted to subscribe");
 		  }
 		  window.location.href = "https://kristy98755.github.io/ksma-schedule-28gr";
